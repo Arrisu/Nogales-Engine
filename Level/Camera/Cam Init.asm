@@ -131,7 +131,7 @@ InitPlayerInfo:
 ; ---------------------------------------------------------------------------
 
 PlayStartLocs:                         
-        dc.w $50,$2B0 	; GHZ
+        dc.w $50,$0B0 	; GHZ
         dc.w $50,$FC
         dc.w $50,$3B0
         dc.w $80,$A8
@@ -190,36 +190,10 @@ InitScrollBlocks:
 
 ; ---------------------------------------------------------------------------
 .Limits:                               
-        dc.w $70 	; GHZ
-        dc.w $100
-        dc.w $100
-        dc.w $100
-
-        dc.w $800 	; LZ
-        dc.w $100
-        dc.w $100
-        dc.w 0
-
-        dc.w $800 	; MZ
-        dc.w $100
-        dc.w $100
-        dc.w 0
-
-        dc.w $800	; SLZ
-        dc.w $100
-        dc.w $100
-        dc.w 0
-
-        dc.w $800	; SZ
-        dc.w $100
-        dc.w $100
-        dc.w 0
-
-        dc.w $800	; CWZ
-        dc.w $100
-        dc.w $100
-        dc.w 0
-
+        dc.w 176	; GHZ
+        dc.w 64
+        dc.w 64
+        dc.w 16*32
 
 ; ---------------------------------------------------------------------------
 ; Initialize all background cameras (B, C, and Z)
@@ -255,7 +229,12 @@ InitBgCams:
 ; ---------------------------------------------------------------------------
 
 BgInit_GHZ:                             
-        bra.w   Scroll_GreenHill
+        move.w  #32,cameraAPosY.w
+        move.w  #32,cameraBPosY.w
+        move.w  d0,cameraAPosX.w
+        move.w  d0,cameraBPosX.w
+        move.w  d0,cameraCPosX.w
+        rts
 
 ; ---------------------------------------------------------------------------
 

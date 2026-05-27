@@ -9,14 +9,7 @@ GM_LEVEL:
 	lea     LevelHeaders,a2
 	lea     (a2,d0.w),a2
 	moveq   #0,d0
-	move.l	(a2),d0
-	andi.l	#$00FFFFFF,d0
-	move.l	d0,a0
-	VDPCMD  move.l,$0000,VRAM,WRITE,VDPCTRL
-	bsr.w	NemDec
 	move.b  (a2),d0
-	bsr.w   LoadArtList                     
-	moveq   #1,d0
 	bsr.w   LoadArtList
 	bsr.w   PalFadeOut
 	bsr.w   InitScreen
@@ -31,7 +24,7 @@ GM_LEVEL:
 	move.w  #$8720,(a6)
 	lea     OBJECTRAM.w,a1
 	moveq   #0,d0
-	move.w  #((OBJSZ*20)/4)-1,d1
+	move.w  #((OBJSZ*96)/4)-1,d1
 
 .ClearObjects:                         
 	move.l  d0,(a1)+

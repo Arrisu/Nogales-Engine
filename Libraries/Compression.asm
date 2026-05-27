@@ -282,7 +282,7 @@ ClearArtListQueue:
 ; ---------------------------------------------------------------------------
 
 ProcessArtLoading:                      
-        tst.l   decompQueue.w
+        tst.l   decompQueue.w           ; If nothing in queue, exit
         beq.s   .End
 
         tst.w   decompTileCount.w
@@ -297,7 +297,6 @@ ProcessArtLoading:
 
 .NotXOR:                               
         andi.w  #$7FFF,d2
-        move.w  d2,decompTileCount.w
 
         bsr.w   NemDec_BuildCodeTable
 
@@ -314,6 +313,7 @@ ProcessArtLoading:
         move.l  d0,decompRow.w
         move.l  d5,decompRead.w
         move.l  d6,decompShift.w
+        move.w  d2,decompTileCount.w
 
 .End:                                  
         rts
@@ -383,6 +383,7 @@ DecompArtList:
 
 .Done:                            
         rts
+
 
 ; ---------------------------------------------------------------------------
 

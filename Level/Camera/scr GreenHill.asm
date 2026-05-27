@@ -25,69 +25,28 @@ Scroll_GreenHill:
         bsr.w   _cameraZSetX
 
         lea     hscroll.w,a1            ; Start calculating new scroll info
-        move.w  cameraAPosY.w,d0
-        andi.w  #$7FF,d0
-        lsr.w   #5,d0
-        neg.w   d0
-        addi.w  #38,d0
-        move.w  d0,cameraCPosY.w
-        move.w  d0,d4
-        bsr.w   _cameraBUserSetY
-        move.w  cameraBPosY.w,mainBPosY.w
-        move.w  #112-1,d1               ; Set abs. size of initial scroll
-        sub.w   d4,d1                   ; Subtract how far upwards we are
-        move.w  cameraAPosX.w,d0
 
-        cmpi.b  #GMNO_TITLE,gamemode.w
-        bne.s   .NotAutoScroll
+        ; Set mountains scroll speed
 
-        moveq   #0,d0
 
-.NotAutoScroll:                        
+        move.w  #(176-32)-1,d1               ; Set abs. size of initial scroll
+        move.w  cameraAPosX.w,d0                     
         neg.w   d0
         swap    d0
         move.w  cameraBPosX.w,d0
         neg.w   d0
 
-.Clouds:                               
+.MtnsWrt:                               
         move.l  d0,(a1)+                ; Write scroll values
-        dbf     d1,.Clouds
-        move.w  #40-1,d1
+        dbf     d1,.MtnsWrt
+
+        ; Set cities scroll speed
+
+        move.w  #32-1,d1
         move.w  cameraCPosX.w,d0
         neg.w   d0
 
-.Cliffs:                               
+.CitiesWrt:                               
         move.l  d0,(a1)+
-        dbf     d1,.Cliffs
-        move.w  cameraCPosX.w,d0
-        addi.w  #0,d0
-        move.w  cameraAPosX.w,d2
-        addi.w  #-512,d2
-        sub.w   d0,d2
-        ext.l   d2
-        asl.l   #8,d2
-        divs.w  #$68,d2
-        ext.l   d2
-        asl.l   #8,d2
-        moveq   #0,d3
-        move.w  d0,d3
-        move.w  #72-1,d1
-        add.w   d4,d1
-
-.SkewWater:                            
-        move.w  d3,d0
-        neg.w   d0
-        move.l  d0,(a1)+
-        swap    d3
-        add.l   d2,d3
-        swap    d3
-        dbf     d1,.SkewWater
-
-        moveq   #0,d0
-        move.w  cameraAPosY.w,d0
-        subi.w  #$300,d0
-        move.w  d0,d1
-        add.w   d1,d0
-        move.w  d0,cameraZPosY.w
-
+        dbf     d1,.CitiesWrt
         rts

@@ -108,7 +108,7 @@ GM_TITLE:
         ; custom for Jantei itself.
         ; the clr instructions below are for the menu input code.
 
-        move.b  #OBJNO_TITLESONIC,objSlot01.w ; load big Sonic object
+        ;move.b  #OBJNO_TITLESONIC,objSlot01.w ; load big Sonic object
         move.w  #2580,genericTimer.w  ; run title screen for 2580 frames
         ;clr.w   selectCntr.w
         ;clr.w   selectCntr2.w

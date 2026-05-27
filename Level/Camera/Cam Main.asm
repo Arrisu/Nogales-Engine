@@ -22,12 +22,12 @@ CameraScroll:
         bsr.w   _cameraASetX
 
 .ReturnX:                         
-        tst.b   autoscrollY.w
-        bne.w   _camAautoY
-        bsr.w   _cameraASetY
+        ;tst.b   autoscrollY.w
+        ;bne.w   _camAautoY
+        ;bsr.w   _cameraASetY
 
 .ReturnY:                         
-        bsr.w   LevelEvents
+        ;bsr.w   LevelEvents
 
 .SetBGScroll:                          
         move.w  cameraAPosX.w,mainAPosX.w
@@ -48,11 +48,6 @@ CameraScroll:
 
 .ScrollIndex:                        
         dc.w Scroll_GreenHill-.ScrollIndex
-        dc.w Scroll_Labyrinth-.ScrollIndex
-        dc.w Scroll_Marble   -.ScrollIndex
-        dc.w Scroll_StarLight-.ScrollIndex
-        dc.w Scroll_Sparkling-.ScrollIndex
-        dc.w Scroll_ClockWork-.ScrollIndex
 
 ; ---------------------------------------------------------------------------
 ; Parallax/Scrolling scripts
