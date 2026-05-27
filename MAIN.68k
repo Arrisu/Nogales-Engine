@@ -920,4 +920,4 @@ LVLINF: macro art1,artlvl,art2,blocks,chunks,musid,palid
 	endm
 
 LevelHeaders:
-	LVLINF  4,ArtNem_GreenHill2,5,MapBlks_GreenHill,MapChnks_GHZ,$81,4 
+	LVLINF  1,ArtNem_GreenHill,2,MapBlks_GreenHill,MapChnks_GHZ,$81,4 

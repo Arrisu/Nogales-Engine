@@ -84,7 +84,6 @@ VBLANK_LOGO:
 
 VBLANK_TITLE:                               
         bsr.w   _vblVDPRefresh
-        bsr.w   _titleDrawCams
         bsr.w   DecompArtList.Fast
         tst.w   genericTimer.w
         beq.w   .Exit

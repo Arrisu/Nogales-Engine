@@ -9,6 +9,11 @@ GM_LEVEL:
 	lea     LevelHeaders,a2
 	lea     (a2,d0.w),a2
 	moveq   #0,d0
+	move.l	(a2),d0
+	andi.l	#$00FFFFFF,d0
+	move.l	d0,a0
+	VDPCMD  move.l,$0000,VRAM,WRITE,VDPCTRL
+	bsr.w	NemDec
 	move.b  (a2),d0
 	bsr.w   LoadArtList                     
 	moveq   #1,d0
@@ -62,31 +67,7 @@ GM_LEVEL:
 	; this is really gross lol
 
 	move.l  #LvlCol_GreenHill,collisionPtr.w
-	cmpi.b  #ZONENO.LZ,zone.w
-	bne.s   .ChkMarble
-	move.l  #LvlCol_Labyrinth,collisionPtr.w
 
-.ChkMarble:
-	cmpi.b  #ZONENO.MZ,zone.w
-	bne.s   .ChkStarLight
-	move.l  #LvlCol_Marble,collisionPtr.w
-
-.ChkStarLight:
-	cmpi.b  #ZONENO.SLZ,zone.w
-	bne.s   .ChkSparkling
-	move.l  #LvlCol_StarLight,collisionPtr.w
-
-.ChkSparkling:
-	cmpi.b  #ZONENO.SZ,zone.w
-	bne.s   .ChkClockWork
-	move.l  #LvlCol_Sparkling,collisionPtr.w
-
-.ChkClockWork:
-	cmpi.b  #ZONENO.CWZ,zone.w
-	bne.s   .NoCollision
-	move.l  #LvlCol_Clockwork,collisionPtr.w
-
-.NoCollision:
 	move.b  #OBJNO_PLAYER,objSlot00.w    
 ;	move.b  #$21,(objSlot01).w
 	btst    #6,joypad.w
