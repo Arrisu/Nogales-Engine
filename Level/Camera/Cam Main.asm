@@ -709,6 +709,7 @@ _drawCamB:
 ; Check draw flags in camera C and draw tiles if set
 ; ---------------------------------------------------------------------------
 
+CAMC_BLKCNT = 10
 
 _drawCamC:                              
         tst.b   (a2)
@@ -732,7 +733,7 @@ _drawCamC:
         sub.w   d1,d6
         blt.s   .SkipRedraw
         lsr.w   #4,d6
-        subi.w  #$E,d6
+        subi.w  #CAMC_BLKCNT,d6
         bcc.s   .SkipRedraw
         neg.w   d6
         bsr.w   _drawColumn.UserSz
@@ -755,10 +756,11 @@ _drawCamC:
         sub.w   d1,d6
         blt.s   .Exit
         lsr.w   #4,d6
-        subi.w  #$E,d6
+        subi.w  #CAMC_BLKCNT,d6
         bcc.s   .Exit
         neg.w   d6
         bsr.w   _drawColumn.UserSz
+
 
 .Exit:                                 
                 rts
