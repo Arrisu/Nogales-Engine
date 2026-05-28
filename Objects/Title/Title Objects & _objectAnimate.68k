@@ -141,6 +141,11 @@ pressstartchg0:
 	dc.b $1F,  0,  1,$FF
 	even
 
+; ---------------------------------------------------------------------------
+; Object animation library
+; Yes. In the rom, it's included right here. It sucks. I know.
+; ---------------------------------------------------------------------------
+
 _objectAnimate:
 	moveq   #0,d0
 	move.b  obj.Anim(a0),d0
@@ -155,7 +160,12 @@ _objectAnimate:
 	adda.w  (a1,d0.w),a1
 	subq.b  #1,obj.FrameTimer(a0)
 	bpl.s   .Exit
-	move.b  (a1),obj.FrameTimer(a0)
+	
+	move.b  (a1),obj.FrameTimer(a0)			; from Jantei
+	bpl.s	.NoOverride				; Used for Player
+	move.b	frametimerOverride.w,obj.FrameTimer(a0)	
+
+.NoOverride
 	moveq   #0,d1
 	move.b  obj.AnimFrame(a0),d1
 	move.b  1(a1,d1.w),d0

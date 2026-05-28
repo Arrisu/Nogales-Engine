@@ -73,7 +73,7 @@ _objectJoypadCtrl:
         move.b  #0,obj.Anim(a0)
 
 .NoC:                                  
-        ;jsr     _playAnimate
+        jsr     _objectAnimate
         rts
 
 ; ---------------------------------------------------------------------------

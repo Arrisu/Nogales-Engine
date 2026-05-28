@@ -72,7 +72,7 @@ RAMEND:         dc.l WORKRAME-1
 		dc.b '    '
 		dc.b '    '
 		dc.b '            '
-		dc.b '                                        '
+		dc.b 'NOGALES                                 '
 		dc.b 'JU              '
 HEADEREND:
 

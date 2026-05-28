@@ -99,7 +99,6 @@ _physFootColDown:
 .InAir:                               
         bset    #PHYS.AIRBORNE,obj.Status(a0)    ; Set air status bit
         bclr    #PHYS.PUSH,obj.Status(a0)       ; Clear pushing status bit
-        move.b  #1,obj.LastAnim(a0)             ; ???
         rts
 
 ; ---------------------------------------------------------------------------
@@ -255,7 +254,6 @@ _physFootColRight:
 .InAir:                              
         bset    #PHYS.AIRBORNE,obj.Status(a0)
         bclr    #PHYS.PUSH,obj.Status(a0)
-        move.b  #1,obj.LastAnim(a0)             ; ???
         rts
 
 
