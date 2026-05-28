@@ -6,16 +6,12 @@ Scroll_GreenHill:
         moveq   #0,d4      
         move.w  camADiffX.w,d4          ; Get base scroll direction
         ext.l   d4
-        asl.l   #5,d4
-        move.l  d4,d1 ;$2000
-        asl.l   #1,d4
-        add.l   d1,d4
-
+        asl.l   #6,d4
         moveq   #0,d5                   ; No Y-draw, Y-scroll is below
 
         bsr.w   _cameraBMoveDraw        ; Use as cam info inputs
         bsr.w   _cameraCSetX
-        
+
         moveq   #0,d4     
         move.w  camADiffX.w,d4          ; Get base scroll direction
         ext.l   d4

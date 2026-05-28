@@ -19,18 +19,6 @@ BLK.BTMSOLID    EQU     $E
 ; ---------------------------------------------------------------------------
 
 _physFootCollision:                     
-        btst    #PHYS.LIFTED,obj.Status(a0)
-        beq.s   .NotOnPlatform
-        moveq   #0,d0                   ; Clear sensor angle information
-        move.b  d0,angleFront.w
-        move.b  d0,angleBack.w
-        rts
-
-.NotOnPlatform:                             
-        moveq   #PHYS_LIFTFLAG,d0       ; Set flag for angle stack
-        move.b  d0,angleFront.w
-        move.b  d0,angleBack.w
-
         move.b  obj.Angle(a0),d0
         addi.b  #$20,d0                 ; Rotate unit circle 45 degrees
         andi.b  #$C0,d0                 ; Use top bits for orientation
