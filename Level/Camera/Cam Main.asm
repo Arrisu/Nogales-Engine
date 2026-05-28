@@ -35,20 +35,7 @@ CameraScroll:
         move.w  cameraBPosY.w,mainBPosY.w
         move.w  cameraZPosX.w,mainZPosX.w
         move.w  cameraZPosY.w,mainZPosY.w
-        jsr     Scroll_GreenHill
-        jmp     SCROLLDEBUG
-
-; ---------------------------------------------------------------------------
-
-.ScrollIndex:                        
-        dc.w Scroll_GreenHill-.ScrollIndex
-        dc.w Scroll_GreenHill-.ScrollIndex
-        dc.w Scroll_GreenHill-.ScrollIndex
-        dc.w Scroll_GreenHill-.ScrollIndex
-        dc.w Scroll_GreenHill-.ScrollIndex
-        dc.w Scroll_GreenHill-.ScrollIndex
-        dc.w Scroll_GreenHill-.ScrollIndex
-        dc.w Scroll_GreenHill-.ScrollIndex
+        jmp     Scroll_GreenHill
 
 ; ---------------------------------------------------------------------------
 ; Parallax/Scrolling scripts
