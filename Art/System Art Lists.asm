@@ -13,4 +13,4 @@ ArtList_GreenHill:
 ArtList_GreenHillSub:    
 	dc.w	1-1             
 	dc.l	ArtNem_Temp
-	dc.w	$4000
+	dc.w	$8000
