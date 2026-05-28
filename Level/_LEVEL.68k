@@ -76,7 +76,7 @@ GM_LEVEL:
 
 	move.w  #$202F,palFadeArgs.w
 	bsr.w   PalFadeIn.UserArgs
-;	move.w  #$8000+%00010100,VDPCTRL
+	move.w  #$8000+%00010100,VDPCTRL
 	bsr.w   DebugArtLoad
 
 LevelLoop:                              
@@ -89,10 +89,10 @@ LevelLoop:
 	bsr.w   GetObjects
 	bsr.w   RunObjects                        
 	bsr.w   CameraScroll
-;	bsr.w   SetHblankLine
+	bsr.w   SetHblankLine
 	bsr.w   CalcWaterWaves
 	bsr.w   DrawObjects
-	bsr.w   CyclePalettes
+;	bsr.w   CyclePalettes
 	bsr.w   ProcessArtLoading
 
 	tst.w   restart.w
@@ -299,18 +299,20 @@ CalcWaterWaves:
 
 
 SetHblankLine:
-	move.w  cameraZPosY.w,d0
-	cmpi.w  #-16,d0
-	bhi.s   .DoZ
-	cmpi.b  #224-1,hblankLine+1.w
-	beq.s   .Exit
-.DoZ:
-	neg.w   d0
-	subi.b  #48+1,d0
-	cmpi.b  #222,d0
-	bhs.s   .Exit
-	move.b  d0,hblankLine+1.w
-	rts
+                btst    #0,(joypad).w
+                beq.s   .Decrement
+                addq.w  #1,(cameraZPosY).w
+                tst.b   (hblankLine+1).w
+                beq.s   .Decrement
+                subq.b  #1,(hblankLine+1).w
+
+.Decrement:
+                btst    #1,(joypad).w
+                beq.s   .Exit
+                subq.w  #1,(cameraZPosY).w
+                cmpi.b  #224-1,(hblankLine+1).w
+                beq.s   .Exit
+                addq.b  #1,(hblankLine+1).w
+
 .Exit:
-	move.b  #224-1,hblankLine+1.w
-	rts
+                rts

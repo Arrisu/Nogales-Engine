@@ -207,10 +207,10 @@ InitScrollBlocks:
 InitBgCams:                             
         move.w  d0,cameraBPosY.w
         move.w  d0,cameraCPosY.w
-        swap    d1
-        move.l  d1,cameraBPosX.w
-        move.l  d1,cameraCPosX.w
-        move.l  d1,cameraZPosX.w
+;        swap    d1
+;        move.l  d1,cameraBPosX.w
+;        move.l  d1,cameraCPosX.w
+;        move.l  d1,cameraZPosX.w
         moveq   #0,d2
         move.b  zone.w,d2
         add.w   d2,d2
@@ -234,6 +234,7 @@ BgInit_GHZ:
         move.w  d0,cameraAPosX.w
         move.w  d0,cameraBPosX.w
         move.w  d0,cameraCPosX.w
+        move.w  d0,camADiffX.w
         rts
 
 ; ---------------------------------------------------------------------------
