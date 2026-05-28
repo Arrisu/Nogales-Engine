@@ -299,6 +299,7 @@ CalcWaterWaves:
 
 
 SetHblankLine:
+		rts
                 btst    #0,(joypad).w
                 beq.s   .Decrement
                 addq.w  #1,(cameraZPosY).w

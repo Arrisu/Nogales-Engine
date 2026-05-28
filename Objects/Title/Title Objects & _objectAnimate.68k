@@ -160,7 +160,7 @@ _objectAnimate:
 	adda.w  (a1,d0.w),a1
 	subq.b  #1,obj.FrameTimer(a0)
 	bpl.s   .Exit
-	
+
 	move.b  (a1),obj.FrameTimer(a0)			; from Jantei
 	bpl.s	.NoOverride				; Used for Player
 	move.b	frametimerOverride.w,obj.FrameTimer(a0)	
@@ -176,7 +176,7 @@ _objectAnimate:
 	andi.b  #$1F,d0
 	move.b  d0,obj.Frame(a0)
 	move.b  obj.Status(a0),d0
-	andi.b  #3,d0
+	andi.b  #1,d0
 	andi.b  #$FC,obj.Render(a0)
 	lsr.b   #5,d1
 	eor.b   d0,d1
