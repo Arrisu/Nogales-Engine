@@ -5,7 +5,8 @@ This is not gunning for 100% accuracy, but rather for "technical" accuracy
 
 
 ## Credits 
-- Emma (Character sprites, Title sprites, Palmtrees, Mountains + Cities)
+- Emma (Character sprites, Title sprites, Palmtrees, Mountains GFX)
+- Louplayer (Mountains GFX)
 - Scraps (Chunk reference)
 - Icetroids (Original base assets)
 - Project HI-TECH '90 (Updated Z-Rock gfx)
