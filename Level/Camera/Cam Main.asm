@@ -16,7 +16,6 @@ PLANE_B         =  $E000
 CameraScroll:                           
         tst.b   cameraLock.w
         bne.s   .SetBGScroll
-
         tst.b   autoscrollX.w
         bne.w   _camAautoX
         bsr.w   _cameraASetX
@@ -36,17 +35,19 @@ CameraScroll:
         move.w  cameraBPosY.w,mainBPosY.w
         move.w  cameraZPosX.w,mainZPosX.w
         move.w  cameraZPosY.w,mainZPosY.w
-        moveq   #0,d0
-        move.b  zone.w,d0
-        add.w   d0,d0
-        move.w  .ScrollIndex(pc,d0.w),d0
-        jsr     .ScrollIndex(pc,d0.w)
-
+        jsr     Scroll_GreenHill
         jmp     SCROLLDEBUG
 
 ; ---------------------------------------------------------------------------
 
 .ScrollIndex:                        
+        dc.w Scroll_GreenHill-.ScrollIndex
+        dc.w Scroll_GreenHill-.ScrollIndex
+        dc.w Scroll_GreenHill-.ScrollIndex
+        dc.w Scroll_GreenHill-.ScrollIndex
+        dc.w Scroll_GreenHill-.ScrollIndex
+        dc.w Scroll_GreenHill-.ScrollIndex
+        dc.w Scroll_GreenHill-.ScrollIndex
         dc.w Scroll_GreenHill-.ScrollIndex
 
 ; ---------------------------------------------------------------------------
@@ -1077,7 +1078,7 @@ DrawCamsInit:
 
 DrawFullCam:
         moveq   #-16,d4
-        moveq   #((224+16+16)/16)-1,d6
+        moveq   #16-1,d6
 
 .Loop:
         movem.l d4-d6,-(sp)
