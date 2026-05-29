@@ -73,10 +73,10 @@ TitleSonic_Move:
 
 ; ---------------------------------------------------------------------------
 
-TitleSonic_Done:    
-	lea     AniSpr_TitleSonic,a1
-	bsr.w   _objectAnimate
-	bra.w   _objectDraw
+TitleSonic_Done:
+	lea	AniSpr_TitleSonic,a1
+	bsr.w	_objectAnimate
+	bra.w	_objectDraw
 	rts	; dead code
 
 ; ---------------------------------------------------------------------------
@@ -91,7 +91,7 @@ ObjTitleMisc:
 	bra.w	_objectDraw		; Set to always display
 
 ; ---------------------------------------------------------------------------
-.Index:     
+.Index:
 	dc.w	TitleMisc_Init-.Index
 	dc.w	TitleMisc_PressStart-.Index
 	dc.w	TitleMisc_Mask-.Index

@@ -93,26 +93,23 @@ Player_Init:
         move.w  #64,playerDecel.w
 
 Player_Main:                             
-        andi.w  #$7FF,obj.Y(a0)         ; Clamp Y pos. to $800 pix. max        
-        andi.w  #$7FF,cameraAPosY.w
+        andi.w  #$FF,obj.Y(a0)         ; Clamp Y pos. to 256 pix. max        
+        andi.w  #$FF,cameraAPosY.w
 
-        tst.w   debug.w                 ; Skip if debug enabled
-        beq.s   .Skip
-        btst    #4,joypadPressMirr.w    ; Turn on editor if B pressed
-        beq.s   .Skip
-
-        move.w  #1,editMode.w
-
-.Skip:                             
+;        tst.w   debug.w                 ; Skip if debug enabled
+;        beq.s   .Skip
+;        btst    #4,joypadPressMirr.w    ; Turn on editor if B pressed
+;        beq.s   .Skip
+;
+;        move.w  #1,editMode.w
+;
+;.Skip:                             
         moveq   #0,d0
         move.b  obj.Status(a0),d0       
         andi.w  #%00000110,d0           ; Use bits 1-2 as offset
 
         move.w  .PhysicsModes(pc,d0.w),d1
         jsr     .PhysicsModes(pc,d1.w)
-
-        bsr.s   _playTrackPowerups    ; Handle powerup states and drawing
-        bsr.w   _playRecordPos        ; Record previous positions
 
         move.b  angleFront.w,play.FootFront(a0)
         move.b  angleBack.w,play.FootBack(a0)
@@ -121,14 +118,25 @@ Player_Main:
         bpl.s   .Abs
         neg.w   d0
 .Abs
+        cmpi.w  #$600,d0
+        bne.s   .NotMax
+        moveq   #1,d0
+        move.b  d0,obj.Anim(a0)
+        bra.s   .Skip2
+
+.NotMax
         asr.w   #7,d0
         eor.b   #$F,d0
+        sub.b   #1,d0
+        bcc.s   .Skip2
+        moveq   #0,d0
+.Skip2
         move.b  d0,frametimerOverride.w
 
         lea     AniSpr_Sonic,a1
         bsr.w   _objectAnimate          ; Handle Sonic's animation
         bsr.w   _playDynamicGFX         ; Handle dynamic GFX in VRAM
-        rts
+        bra.w   _objectDraw
 
 ; ---------------------------------------------------------------------------
 

@@ -209,8 +209,8 @@ scoreMirror:    	rs.b 2
 livesFlagMirr:		rs.b 2
 savedLives:   		rs.b 1
               		rs.b	1
-hudTallyFlag: 		rs.b	6
-globalFluxDir:		rs.b	2
+autoscroll1: 		rs.l	1
+autoscroll2:		rs.l	1
                 	rs.b	1
                 	rs.b	1
                 	rs.b	1

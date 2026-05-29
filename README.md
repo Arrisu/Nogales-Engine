@@ -6,6 +6,7 @@ This is not gunning for 100% accuracy, but rather for "technical" accuracy
 
 ## Credits 
 - Emma (Character sprites, Title sprites, Palmtrees, Mountains GFX)
+- Leatheraxe (Chunks and playfield GFX help)
 - Louplayer (Mountains GFX)
 - Scraps (Chunk reference)
 - Icetroids (Original base assets)

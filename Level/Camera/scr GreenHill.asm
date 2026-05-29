@@ -24,13 +24,25 @@ Scroll_GreenHill:
 
         lea     hscroll.w,a1            ; Start calculating new scroll info
 
-        ; Set mountains scroll speed
 
-
-        move.w  #(176-32)-1,d1               ; Set abs. size of initial scroll
+        ; use autoscroll1.w
+        add.l   #$18000,autoscroll1.w
+        move.w  autoscroll1.w,d2
+        move.w  #28-1,d1                ; Set abs. size of initial scroll
         move.w  cameraAPosX.w,d0                     
         neg.w   d0
         swap    d0
+        move.w  cameraBPosX.w,d0
+        add.w   d2,d0
+        neg.w   d0
+
+.CloudsWrt:                               
+        move.l  d0,(a1)+                ; Write scroll values
+        dbf     d1,.CloudsWrt
+
+        ; Set mountains scroll speed
+
+        move.w  #(176-(32+28))-1,d1               ; Set abs. size of initial scroll
         move.w  cameraBPosX.w,d0
         neg.w   d0
 
