@@ -66,7 +66,9 @@ GM_LEVEL:
 	btst    #6,joypad.w
 	beq.s   .NoDebug
 	move.b  #1,debug.w
-	bsr.w   DebugSetupOld
+	move.b  #OBJNO_PLAYTEST,objSlot00.w 
+;	bsr.w   DebugSetupOld
+
 .NoDebug:
 	move.w  #0,joypadMirr.w
 	move.w  #0,joypad.w
@@ -81,7 +83,7 @@ GM_LEVEL:
 
 LevelLoop:                              
 	bsr.w   PauseGame
-	bsr.w	DebugReportInfo
+;	bsr.w	DebugReportInfo
 	move.b  #vbID_LEVEL,vblankCmd.w
 	bsr.w   VSync
 	addq.w  #1,frameCnt.w
@@ -105,7 +107,7 @@ LevelLoop:
 ; Debugger report
 ; ---------------------------------------------------------------------------
 
-DBUGSTARTSLOT = objSlot0A
+DBUGSTARTSLOT = objSlot01
 OBJWORD = OBJSZ*4
 
 DebugReportInfo:

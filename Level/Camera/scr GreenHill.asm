@@ -17,7 +17,7 @@ Scroll_GreenHill:
         ext.l   d4
         asl.l   #7,d4
         move.l  d4,d1
-        asl.l   #1,d4
+        asl.l   #2,d4
         add.l   d1,d4
 
         bsr.w   _cameraZSetX
