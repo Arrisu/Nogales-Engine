@@ -1,0 +1,38 @@
+; ---------------------------------------------------------------------------
+; Plane Z Scenery Object
+; ---------------------------------------------------------------------------
+
+ObjPlaneZ:                                
+	moveq   #0,d0
+	move.b  obj.Action(a0),d0
+	move.w  .Index(pc,d0.w),d1
+	jmp     .Index(pc,d1.w)
+
+; ---------------------------------------------------------------------------
+.Index:
+	dc.w PlaneZ_Init-.Index
+	dc.w PlaneZ_Main-.Index
+	dc.w PlaneZ_Exit-.Index
+	dc.w PlaneZ_Exit-.Index
+; ---------------------------------------------------------------------------
+
+PlaneZ_Init:                            
+	addq.b  #2,obj.Action(a0)
+
+	move.l  #SprPat_PlaneZ,obj.Pat(a0)
+	move.w  #$6000,obj.Tile(a0)
+        move.b  #56,obj.XRender(a0)
+	move.b	obj.Args(a0),obj.Frame(a0)
+	move.b  #%1100,obj.Render(a0) 	; Render with CamZ
+	move.b  #1,obj.ColliCnt(a0)
+	move.b  #0,obj.Priority(a0)
+
+PlaneZ_Main:                            
+	bra.w	_objectDraw
+
+PlaneZ_Exit:                            
+	bsr.w   _objectDelete
+	rts
+
+SprPat_PlaneZ:
+	include	"Objects/PlaneZ/PLANEZ_PAT.asm"

@@ -128,7 +128,7 @@ ObjectIndex:
 	OBJDEF	ObjDevDigit1,		OBJNO_DIGIT1		; 5
 	OBJDEF	ObjDevDigit2,		OBJNO_DIGIT2		; 6
 	OBJDEF	ObjDummy,		OBJNO_DEV6		; 7
-	OBJDEF	ObjDummy					; 8
+	OBJDEF	ObjPlaneZ,		OBJNO_PLANEZ		; 8
 	OBJDEF	ObjPlayerTest,		OBJNO_PLAYSPECIAL	; 9
 	OBJDEF	ObjDummy					; A
 	OBJDEF	ObjDummy					; B
@@ -641,35 +641,17 @@ GetObjects:
 GetObjects_Init:                        
 	addq.b  #2,getobjsMode.w
 
-	move.w  zone.w,d0               ; Get current zone objtbls
-	lsl.b   #6,d0
-	lsr.w   #4,d0
-	lea     ObjListTbl,a0
-	movea.l a0,a1
+	move.l  #ObjPosList_GHZ1,objtblEntrRight.w
+	move.l  #ObjPosList_GHZ1,objtblEntrLeft.w
 
-	adda.w  (a0,d0.w),a0            ; Store index tables 'A' (main)
-	move.l  a0,objtblEntrRight.w
-	move.l  a0,objtblEntrLeft.w
+	move.l  #ObjPosList_GHZ1_Z,objtblEntrRightZ.w  
+	move.l  #ObjPosList_GHZ1_Z,objtblEntrLeftZ.w
 
-	adda.w  2(a1,d0.w),a1           ; Store index tables 'Z'
-	move.l  a1,objtblEntrRightZ.w  
-	move.l  a1,objtblEntrLeftZ.w
-
-	lea     objectStates.w,a2       ; Reset object states
-	move.w  #$101,(a2)+
-	move.w  #$5F-1,d0
-
-.ClearStates:                          
-	clr.l   (a2)+
-	dbf     d0,.ClearStates
-	
 	move.w  #-1,camAChunkX.w
 
 ; ---------------------------------------------------------------------------
 
 GetObjects_Main:                        
-	lea     objectStates.w,a2
-	moveq   #0,d2
 	move.w  cameraAPosX.w,d6        ; Get Cam A X position
 	andi.w  #$FF80,d6               ; Shorten to multiples of 128
 	cmp.w   camAChunkX.w,d6         ; Check against chunk value
@@ -691,14 +673,7 @@ _getobjsLeft:
 	cmp.w   -OBJENTRSZ(a0),d6
 	bge.s   .CheckRight
 
-	subq.w  #OBJENTRSZ,a0
-	tst.b   objentr.ID(a0)
-	bpl.s   .NoStateInf
-	
-	subq.b  #1,1(a2)
-	move.b  1(a2),d2
-
-.NoStateInf:                              
+	subq.w  #OBJENTRSZ,a0         
 	bsr.w   _getobjCreate           ; Try to spawn object 
 					; (and increment current entry)
 	bne.s   .Failed                 ; Perform rightward check if failed
@@ -706,12 +681,7 @@ _getobjsLeft:
 	subq.w  #OBJENTRSZ,a0           ; Otherwise dec. entry and try again
 	bra.s   .FindLeft
 
-.Failed:                               
-	tst.b   objentr.ID(a0)
-	bpl.s   .NoStInf2
-	addq.b  #1,1(a2)
-
-.NoStInf2:                               
+.Failed:                                          
 	addq.w  #OBJENTRSZ,a0
 
 ; --------------------------------------
@@ -749,13 +719,6 @@ _getobjRight:
 	cmp.w   objentr.X(a0),d6       ; Branch if out of fwd. range
 	bls.s   .CheckLeft
 
-	tst.b   objentr.ID(a0)         ; Skip state set if MSB unset
-	bpl.s   .NoStateInfo
-
-	move.b  (a2),d2
-	addq.b  #1,(a2)
-
-.NoStateInfo:                       
 	bsr.w   _getobjCreate           ; Try to spawn object 
 					; (and increment current entry)
 	beq.s   .FindRight              ; Loop if object spawned successfully
@@ -770,12 +733,6 @@ _getobjRight:
 	cmp.w   objentr.X(a0),d6
 	bls.s   .FoundLeft
 
-	tst.b   objentr.ID(a0)
-	bpl.s   .NoStInf2
-
-	addq.b  #1,1(a2)
-
-.NoStInf2:                         
 	addq.w  #OBJENTRSZ,a0
 	bra.s   .FindLeft
 
@@ -786,8 +743,7 @@ _getobjRight:
 ; Get and create objects for camera Z movement (forwards)
 ; ---------------------------------------------------------------------------
 
-_getobjZ:
-	rts       
+_getobjZ:      
 	movea.l objtblEntrRightZ.w,a0   
 	move.w  cameraZPosX.w,d0        
 	addi.w  #512,d0                 ; Adjust to 1 screen (320pix) ahead
@@ -834,13 +790,14 @@ _getobjCreate:
 	move.b  d1,obj.Render(a1)       ; Write to render and status
 	move.b  d1,obj.Status(a1)
 	move.b  (a0)+,d0                ; Get ID
-	bpl.s   .NoState                ; If no state entry skip over
-	andi.b  #$7F,d0                 ; Mask top bit out
-	move.b  d2,obj.Respawn(a1)      ; Write respawn info
+	nop
+	nop
+	nop
+	nop
 
 .NoState:                               
-	move.b  d0,obj.No(a1)           ; Write ID
-	move.b  (a0)+,obj.Args(a1)       ; Write argument
+	move.b  d0,obj.No(a1)		; Write ID
+	move.b  (a0)+,obj.Args(a1)	; Write argument
 	moveq   #0,d0
 
 .NoSlotFound:                            

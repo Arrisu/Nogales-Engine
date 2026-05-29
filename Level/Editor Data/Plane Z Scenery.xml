@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<ObjDef xmlns="http://www.sonicretro.org" Name="Breakable Wall" RememberState="false" Image="img1">
+  <Images>
+    <ImageFromMappings id="img1">
+      <ArtFile filename="Data/Art/GHZ1.nem" />
+      <MapFile type="ASM" filename="PLANEZ_PAT.asm" frame="0" startpal="2" />
+    </ImageFromMappings>
+    <ImageFromMappings id="img2">
+    <ArtFile filename="Data/Art/GHZ1.nem" />
+      <MapFile type="ASM" filename="PLANEZ_PAT.asm" frame="1" startpal="2" />
+    </ImageFromMappings>
+    <ImageFromMappings id="img3">
+    <ArtFile filename="Data/Art/GHZ1.nem" />
+      <MapFile type="ASM" filename="PLANEZ_PAT.asm" frame="2" startpal="2" />
+    </ImageFromMappings>
+  </Images>
+  <Subtypes>
+    <Subtype id="00" name="Palmtree Full" image="img1"/>
+    <Subtype id="01" name="Palmtree Split" image="img2"/>
+    <Subtype id="02" name="Rock Top" image="img3"/>
+  </Subtypes>
+</ObjDef>

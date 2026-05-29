@@ -312,8 +312,6 @@ GAMEMODE macro   addr, id
 	GAMEMODE   GM_LEVEL,    GMNO_DEMO       ; Demo
 	GAMEMODE   GM_LEVEL,    GMNO_LEVEL      ; Level
 	GAMEMODE   .Null,       GMNO_SPECIAL    ; Special Stage
-						; (unimplemented)
-						; (unimplemented) 
 .Null:
 	rts
 
@@ -891,6 +889,7 @@ AngleTable:
 ; ---------------------------------------------------------------------------
 
 	include "Objects/Development/Dev Objects.68k"
+	include "Objects/PlaneZ/Plane Z Scenery.68k"
 	include "Objects/Title/Title Objects & _objectAnimate.68k"
 	include "Objects/Platform/Bridge & Platforms Core/Bridge & Platforms Core.68k"
 	include "Objects/Enemy/Pig & Bomb/Pig & Bomb.68k"

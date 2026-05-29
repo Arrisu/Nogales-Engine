@@ -1,0 +1,43 @@
+{
+    "Flex": 2,
+    "name": "",
+    "node": "c673c9f4-b22d-4d64-b06d-9dde515456eb",
+    "objects": [
+        {
+            "name": "Scenery",
+            "children": [
+                {
+                    "format": "Sonic 1.js",
+                    "name": "Plane Z",
+                    "palettes": [
+                        {
+                            "path": "../Level/Data/Palettes/Sonic.bin",
+                            "length": 1
+                        },
+                        {
+                            "path": "../Level/Data/Palettes/Green Hill.bin",
+                            "length": 3
+                        }
+                    ],
+                    "art": {
+                        "path": "../Level/Data/Art/GHZ1.nem",
+                        "compression": "Nemesis",
+                        "offset": 0
+                    },
+                    "mappings": {
+                        "path": "PlaneZ/PLANEZ_PAT.asm",
+                        "label": ""
+                    },
+                    "dplcs": {
+                        "enabled": false,
+                        "path": "",
+                        "label": ""
+                    },
+                    "uuid": "c673c9f4-b22d-4d64-b06d-9dde515456eb"
+                }
+            ],
+            "isDirectory": true,
+            "expanded": true
+        }
+    ]
+}
