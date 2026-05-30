@@ -14,11 +14,19 @@ Scroll_GreenHill:
 
         moveq   #0,d4     
         move.w  camADiffX.w,d4          ; Get base scroll direction
+        
+        ; This should set camera A * 2
+
         ext.l   d4
-        asl.l   #7,d4
-        move.l  d4,d1
-        asl.l   #2,d4
-        add.l   d1,d4
+        asl.l   #8,d4
+        add.l   d4,d4
+
+        ; HOWEVER, if I am bad at math, try tuning this instead:
+
+        ;       move.l  d4,d1
+        ;       asl.l   #8,d4
+        ;       asl.l   #8,d1
+        ;       add.l   d1,d4
 
         bsr.w   _cameraZSetX
 
