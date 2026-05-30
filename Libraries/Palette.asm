@@ -262,7 +262,7 @@ PalFadeIn:
         move.w  #21-1,d4 	        ; Time in frames	
 
 .Loop:                                 
-        move.b  #vbID_PALFUNC,vblankCmd.w
+        move.b  #VBCMD_PALFUNC,vblankCmd.w
         bsr.w   VSync
 
         bsr.s   .DoFadeCalc
@@ -324,7 +324,7 @@ PalFadeOut:
         move.w  #21-1,d4
 
 .Loop:                                 
-        move.b  #vbID_PALFUNC,(vblankCmd).w
+        move.b  #VBCMD_PALFUNC,(vblankCmd).w
         bsr.w   VSync
 
         bsr.s   .DoFadeCalc

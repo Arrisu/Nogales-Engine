@@ -127,7 +127,7 @@ specialAngle:   	rs.b 2
 specialSpinSpeed:	rs.b 2
                 	rs.b $C
 demoAddr: 		rs.b 2    
-demoCurInput:   	rs.b 2
+demoHeldTime:   	rs.b 2
 demoHalfFade:   	rs.b 2  
 collisionPtr: 		rs.b 4    
 specialCycCurrent:	rs.b 2  

@@ -51,7 +51,7 @@ GM_LOGO:
         move.w  d0,VDPCTRL		     ; Enable display when ready
 
 .MainLoop:                                 
-        move.b  #vbID_LOGO,vblankCmd.w
+        move.b  #VBCMD_LOGO,vblankCmd.w
         bsr.w   VSync
         bsr.w   _logoCycPal 		     ; see: Libraries/lib Palette.asm
         

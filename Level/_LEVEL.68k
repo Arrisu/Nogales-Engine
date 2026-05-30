@@ -42,7 +42,7 @@ GM_LEVEL:
 	move.b  zone.w,d0
 
 .WaitUntilDone:                        
-	move.b  #vbID_LVLSTART,vblankCmd.w
+	move.b  #VBCMD_LVLSTART,vblankCmd.w
 	bsr.w   VSync
 	bsr.w   GetObjects
 	bsr.w   RunObjects
@@ -63,36 +63,48 @@ GM_LEVEL:
 
 	move.b  #OBJNO_PLAYER,objSlot00.w    
 ;	move.b  #$21,(objSlot01).w
+	; SACBLRDU
+
 	btst    #6,joypad.w
 	beq.s   .NoDebug
 	move.b  #1,debug.w
 	move.b  #OBJNO_PLAYTEST,objSlot00.w 
 ;	bsr.w   DebugSetupOld
+	bra.s	.SkipDemoSet
 
 .NoDebug:
+	btst    #4,joypad.w
+	beq.s   .SkipDemoSet
+	move.b  #1,demo.w
+	lea     DemoData,a1
+	move.b  1(a1),demoHeldTime.w
+	subq.b  #1,demoHeldTime.w
+	move.w  #1800,genericTimer.w
+
+.SkipDemoSet:
 	move.w  #0,joypadMirr.w
 	move.w  #0,joypad.w
-	move.w  #1800,genericTimer.w
-	move.b  #vbID_LEVEL,vblankCmd.w
+	move.b  #VBCMD_LEVEL,vblankCmd.w
 	bsr.w   VSync
 
 	move.w  #$202F,palFadeArgs.w
 	bsr.w   PalFadeIn.UserArgs
 	move.w  #$8000+%00010100,VDPCTRL
 	bsr.w   DebugArtLoad
-
 LevelLoop:                              
 	bsr.w   PauseGame
 ;	bsr.w	DebugReportInfo
-	move.b  #vbID_LEVEL,vblankCmd.w
+	move.b  #VBCMD_LEVEL,vblankCmd.w
 	bsr.w   VSync
 	addq.w  #1,frameCnt.w
+	bsr.w   SetHblankLine
+	bsr.w   RunDemo
 	move.w  joypad.w,joypadMirr.w
 
 	bsr.w   GetObjects
 	bsr.w   RunObjects                        
 	bsr.w   CameraScroll
-	bsr.w   SetHblankLine
+	
 	bsr.w   DrawObjects
 	bsr.w   ProcessArtLoading
 
@@ -102,6 +114,40 @@ LevelLoop:
 	cmpi.b  #GMNO_LEVEL,gamemode.w
 	beq.w   LevelLoop
 	rts 
+
+.DemoFadeInit:
+	tst.w   restart.w
+	bne.s   .NotDone
+	tst.w   genericTimer.w
+	beq.s   .NotDone
+	cmpi.b  #GMNO_DEMO,gamemode.w
+	beq.w   LevelLoop
+	move.b  #GMNO_LOGO,gamemode.w
+	rts
+.NotDone:
+	cmpi.b  #GMNO_DEMO,gamemode.w
+	bne.s   .NotDemo
+	move.b  #GMNO_LOGO,gamemode.w
+
+.NotDemo:
+	move.w  #$3C,genericTimer.w
+	move.w  #$3F,palFadeArgs.w
+
+.DemoFadeLoop:
+	move.b  #VBCMD_LEVEL,vblankCmd.w
+	bsr.w	VSync
+	bsr.w	RunDemo
+	bsr.w	RunObjects
+	bsr.w	DrawObjects
+	bsr.w	GetObjects
+	subq.w  #1,demoHalfFade.w
+	bpl.s   .Skip
+	move.w  #2,demoHalfFade.w
+	bsr.w   PalFadeOut.DoFadeCalc
+.Skip:
+	tst.w	genericTimer.w
+	bne.s	.DemoFadeLoop
+	rts
 
 ; ---------------------------------------------------------------------------
 ; Debugger report
@@ -323,20 +369,109 @@ CalcWaterWaves:
 
 SetHblankLine:
 		rts
-                btst    #0,(joypad).w
-                beq.s   .Decrement
-                addq.w  #1,(cameraZPosY).w
-                tst.b   (hblankLine+1).w
-                beq.s   .Decrement
-                subq.b  #1,(hblankLine+1).w
+		btst    #0,(joypad).w
+		beq.s   .Decrement
+		addq.w  #1,(cameraZPosY).w
+		tst.b   (hblankLine+1).w
+		beq.s   .Decrement
+		subq.b  #1,(hblankLine+1).w
 
 .Decrement:
-                btst    #1,(joypad).w
-                beq.s   .Exit
-                subq.w  #1,(cameraZPosY).w
-                cmpi.b  #224-1,(hblankLine+1).w
-                beq.s   .Exit
-                addq.b  #1,(hblankLine+1).w
+		btst    #1,(joypad).w
+		beq.s   .Exit
+		subq.w  #1,(cameraZPosY).w
+		cmpi.b  #224-1,(hblankLine+1).w
+		beq.s   .Exit
+		addq.b  #1,(hblankLine+1).w
 
 .Exit:
-                rts
+		rts
+
+; ---------------------------------------------------------------------------
+; Demo routines
+; ---------------------------------------------------------------------------
+
+RunDemo:
+	tst.w	demo.w
+	bne.s	.InDemo
+	rts
+
+; ---------------------------------------------------------------------------
+; Demo recorder code, uses proprietary development hardware
+; Data is written past the CARTRIDGE memory space at 0x800000
+; ---------------------------------------------------------------------------
+
+	lea	$800000,a1
+	move.w	demoAddr.w,d0
+	adda.w	d0,a1
+	move.b	joypad.w,d0
+	cmp.b	(a1),d0
+	bne.s	.InputChanged
+	addq.b	#1,1(a1)		; Count how long it's held
+	cmpi.b	#$FF,1(a1)
+	beq.s	.InputChanged
+	rts
+
+.InputChanged:
+	move.b	d0,2(a1)
+	move.b	#0,3(a1)
+	addq.w	#2,demoAddr.w
+	andi.w	#$3FF,demoAddr.w
+	rts
+
+; ---------------------------------------------------------------------------
+; Demo playback code
+; ---------------------------------------------------------------------------
+
+.InDemo:
+	lea	DemoData,a1		; Hardcoded reference here
+	move.w	demoAddr.w,d0
+	adda.w	d0,a1
+	move.b	(a1),d0
+	lea   	joypad.w,a0
+	move.b	d0,d1
+	move.b	(a0),d2
+	eor.b 	d2,d0
+	move.b	d1,(a0)+
+	and.b 	d1,d0
+	move.b	d0,(a0)+
+	subq.b	#1,demoHeldTime.w
+	bcc.s 	.Exit
+	move.b	3(a1),demoHeldTime.w
+	addq.w	#2,demoAddr.w
+
+.Exit:
+	rts
+
+; ---------------------------------------------------------------------------
+; Demo input table
+; This is leftover in our prototype, unreferenced, right after the index
+; So here, I just removed the index and made it directly reference these.
+; That's probably how this was.
+; ---------------------------------------------------------------------------
+
+DemoData:
+	dc.b   0,139
+	dc.b   8, 55
+	dc.b   0, 66
+	dc.b   8, 92
+	dc.b   0,106
+	dc.b   8, 95
+	dc.b   0, 47
+	dc.b   8, 44
+	dc.b   0, 33
+	dc.b   8,  3
+	dc.b  40, 48
+	dc.b   8,  8
+	dc.b   0, 46
+	dc.b   8, 21
+	dc.b   0, 15
+	dc.b   8, 70
+	dc.b   0, 26
+	dc.b   8,255
+	dc.b   8,202
+	dc.b   0,  0
+	dc.b   0,  0
+	dc.b   0,  0
+	dc.b   0,  0
+	dc.b   0,  0
