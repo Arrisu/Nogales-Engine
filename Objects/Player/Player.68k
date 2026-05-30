@@ -88,9 +88,10 @@ Player_Init:
         move.b  #24,obj.XRender(a0)      
         move.b  #%100,obj.Render(a0)    ; Draw based on playfield
 
-        move.w  #$600,playerMaxSpeed.w  ; Set player physics deltas
-        move.w  #12,playerAccel.w       
+        move.w  #$600,playerMaxSpeed.w  ; Reset player phys. deltas
+        move.w  #12,playerAccel.w
         move.w  #64,playerDecel.w
+
 
 Player_Main:                             
         andi.w  #$FF,obj.Y(a0)         ; Clamp Y pos. to 256 pix. max        
@@ -199,7 +200,7 @@ _playTrackPowerups:
         subq.w  #1,play.Speedup(a0)
         bne.s   .Spedup
 
-        move.w  #$600,playerMaxSpeed.w  ; Reset player phys. deltas
+        move.w  #$800,playerMaxSpeed.w  ; Reset player phys. deltas
         move.w  #12,playerAccel.w
         move.w  #64,playerDecel.w
 

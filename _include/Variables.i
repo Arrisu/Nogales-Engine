@@ -81,7 +81,7 @@ limitADown:     	rs.b 2
 camARoutine:    	rs.b 2                  
 camAKeepH:      	rs.b 2                  
 camAKeepV:      	rs.b 2
-                	rs.b 2
+previousAPosX:          rs.b 2
                 	rs.b 2
 camADiffX:      	rs.b 2                  
 camADiffY:      	rs.b 2                  
@@ -91,7 +91,7 @@ autoscrollY:     	rs.b 1
 eventRoutine:   	rs.b 1                                      
                 	rs.b 1
 cameraLock:     	rs.b 1                  
-                	rs.b 1
+cameraManual:           rs.b 1
 redrawUnk1:     	rs.b 2                  
 redrawUnk2:     	rs.b 2                  
 cameraAblkX:    	rs.b 1                  

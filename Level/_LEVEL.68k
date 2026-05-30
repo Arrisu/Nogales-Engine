@@ -63,6 +63,9 @@ GM_LEVEL:
 
 	move.b  #OBJNO_PLAYER,objSlot00.w    
 ;	move.b  #$21,(objSlot01).w
+
+; DEV DEV DEV DEV DEV DEV DEV DEV DEV DEV DEV DEV DEV DEV DEV 
+
 	; SACBLRDU
 
 	btst    #6,joypad.w
@@ -76,12 +79,21 @@ GM_LEVEL:
 	btst    #4,joypad.w
 	beq.s   .SkipDemoSet
 	move.b  #1,demo.w
+
+.SkipDemoSet:
+	btst	#5,joypad.w
+	beq.s	.SkipManualCam
+	move.b	#1,cameraManual.w
+	move.b  #0,objSlot00.w 
+
+.SkipManualCam:
+
+; DEV DEV DEV DEV DEV DEV DEV DEV DEV DEV DEV DEV DEV DEV DEV 
+
 	lea     DemoData,a1
 	move.b  1(a1),demoHeldTime.w
 	subq.b  #1,demoHeldTime.w
 	move.w  #1800,genericTimer.w
-
-.SkipDemoSet:
 	move.w  #0,joypadMirr.w
 	move.w  #0,joypad.w
 	move.b  #VBCMD_LEVEL,vblankCmd.w
