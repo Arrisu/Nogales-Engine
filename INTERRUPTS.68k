@@ -21,143 +21,142 @@ VBCMD_PALFUNC        EQU         9*2
 ; ---------------------------------------------------------------------------
 
 VBLANK:                                 
-        movem.l d0-d7/a0-a6,-(sp)
-        tst.b   vblankCmd.w           ; If no command given, exit
-        beq.s   .End
-        move.w  VDPCTRL,d0
-        move.l  #VSRAMWRITE,VDPCTRL
-        move.l  mainAPosY.w,VDPDATA
+	movem.l d0-d7/a0-a6,-(sp)
+	tst.b   vblankCmd.w           ; If no command given, exit
+	beq.s   .End
+	move.w  VDPCTRL,d0
+	move.l  #VSRAMWRITE,VDPCTRL
+	move.l  mainAPosY.w,VDPDATA
 
-        btst    #6,hardwareVer.w      ; Get hardware region
-        beq.s   .NTSC                 ; Skip if NTSC
-        move.w  #$700,d0              ; Wait for PAL timing               
-        dbf     d0,*                    
+	btst    #6,hardwareVer.w      ; Get hardware region
+	beq.s   .NTSC                 ; Skip if NTSC
+	move.w  #$700,d0              ; Wait for PAL timing               
+	dbf     d0,*                    
 .NTSC:                                 
-        move.b  vblankCmd.w,d0        ; Get user command
-        move.b  #0,vblankCmd.w        ; Clear command variable
-        move.w  #1,hblankFlag.w       ; Reset the HBLANK exec. flag
-        andi.w  #%111110,d0
-        move.w  .Index(pc,d0.w),d0    ; Jump to execution
-        jsr     .Index(pc,d0.w)
+	move.b  vblankCmd.w,d0        ; Get user command
+	move.b  #0,vblankCmd.w        ; Clear command variable
+	move.w  #1,hblankFlag.w       ; Reset the HBLANK exec. flag
+	andi.w  #%111110,d0
+	move.w  .Index(pc,d0.w),d0    ; Jump to execution
+	jsr     .Index(pc,d0.w)
 
 .End:                                  
-        addq.l  #1,vblankCntr.w
-        movem.l (sp)+,d0-d7/a0-a6
-        rte
+	addq.l  #1,vblankCntr.w
+	movem.l (sp)+,d0-d7/a0-a6
+	rte
 
 ; ---------------------------------------------------------------------------
 
 .NULL                                
-        rts
+	rts
 
 ; ---------------------------------------------------------------------------
 
 .Index:                                
-        dc.w .NULL-.Index                       ; 0
-        dc.w VBLANK_LOGO-.Index                 ; 2
-        dc.w VBLANK_TITLE-.Index                ; 4
-        dc.w VBLANK_UNK-.Index                  ; 6
-        dc.w VBLANK_LEVEL-.Index                ; 8
-        dc.w VBLANK_SPECIAL-.Index              ; A
-        dc.w VBLANK_LVLSTART-.Index             ; C
-        dc.w VBLANK_TIMER-.Index                ; E
-        dc.w VBLANK_PAUSE-.Index                ; 10
-        dc.w VBLANK_PALFUNC-.Index              ; 12
+	dc.w .NULL-.Index                       ; 0
+	dc.w VBLANK_LOGO-.Index                 ; 2
+	dc.w VBLANK_TITLE-.Index                ; 4
+	dc.w VBLANK_UNK-.Index                  ; 6
+	dc.w VBLANK_LEVEL-.Index                ; 8
+	dc.w VBLANK_SPECIAL-.Index              ; A
+	dc.w VBLANK_LVLSTART-.Index             ; C
+	dc.w VBLANK_TIMER-.Index                ; E
+	dc.w VBLANK_PAUSE-.Index                ; 10
+	dc.w VBLANK_PALFUNC-.Index              ; 12
 
 ; ---------------------------------------------------------------------------
 ; LOGO / SEGA Screen routine
 ; ---------------------------------------------------------------------------
 
 VBLANK_LOGO:                                
-        bsr.w   _vblVDPRefresh
-        tst.w   genericTimer.w
-        beq.w   .Exit
-        subq.w  #1,genericTimer.w
+	bsr.w   _vblVDPRefresh
+	tst.w   genericTimer.w
+	beq.w   .Exit
+	subq.w  #1,genericTimer.w
 
 .Exit:                             
-        rts
+	rts
 
 ; ---------------------------------------------------------------------------
 ; TITLE Screen routine
 ; ---------------------------------------------------------------------------
 
 VBLANK_TITLE:                               
-        bsr.w   _vblVDPRefresh
-        bsr.w   DecompArtList.Fast
-        tst.w   genericTimer.w
-        beq.w   .Exit
-        subq.w  #1,genericTimer.w
+	bsr.w   _vblVDPRefresh
+	bsr.w   DecompArtList.Fast
+	tst.w   genericTimer.w
+	beq.w   .Exit
+	subq.w  #1,genericTimer.w
 
 .Exit:                             
-        rts
+	rts
 
 ; ---------------------------------------------------------------------------
 ; Unknown basic routine
 ; ---------------------------------------------------------------------------
 
 VBLANK_UNK:                               
-        bsr.w   _vblVDPRefresh
-        rts
+	bsr.w   _vblVDPRefresh
+	rts
 
 ; ---------------------------------------------------------------------------
 ; PAUSE routine
 ; ---------------------------------------------------------------------------
 
 VBLANK_PAUSE:                               
-        cmpi.b  #GMNO_SPECIAL,gamemode.w
-        beq.w   VBLANK_SPECIAL
+	cmpi.b  #GMNO_SPECIAL,gamemode.w
+	beq.w   VBLANK_SPECIAL
 
 ; ---------------------------------------------------------------------------
 ; LEVEL main routine (Post-load, when in level gameplay)
 ; ---------------------------------------------------------------------------
 
 VBLANK_LEVEL:                      
-        bsr.w   ReadJoypads
-        move.w  #$100,Z80BUS
+	bsr.w   ReadJoypads
+	move.w  #$100,Z80BUS
 
 .WaitZ80:                              
-        btst    #0,Z80BUS
-        bne.s   .WaitZ80
+	btst    #0,Z80BUS
+	bne.s   .WaitZ80
 
-        VDPDMA  palette,$0000,$80,CRAM,a5     ; Palette DMA
-        VDPDMA  hscroll,$FC00,$380,VRAM,a5    ; Hscroll DMA
+	VDPDMA  palette,$0000,$80,CRAM,a5     ; Palette DMA
+	VDPDMA  hscroll,$FC00,$380,VRAM,a5    ; Hscroll DMA
 
-        move.w  #$8407,(a5)
-        move.w  #$8B00+%0011,(a5)
-        move.w  hblankLine.w,(a5)
-        move.w  mainZPosY.w,hblankZPosY.w
+	move.w  #$8407,(a5)
+	move.w  #$8B00+%0011,(a5)
+	move.w  hblankLine.w,(a5)
+	move.w  mainZPosY.w,hblankZPosY.w
 
-        VDPDMA  sprites,$F800,$280,VRAM,a5    ; Sprite DMA
+	VDPDMA  sprites,$F800,$280,VRAM,a5    ; Sprite DMA
 
-        tst.b   playerDrawFlag.w
-        beq.s   .NoSonicRedraw
+	tst.b   playerDrawFlag.w
+	beq.s   .NoSonicRedraw
 
-        VDPDMA  playDMABuffer,$F000,$2E0,VRAM,a5 ; Sonic art DMA
+	VDPDMA  playDMABuffer,$F000,$2E0,VRAM,a5 ; Sonic art DMA
 
-        move.b  #0,playerDrawFlag.w
+	move.b  #0,playerDrawFlag.w
 
 .NoSonicRedraw:                                
-        move.w  #0,Z80BUS
+	move.w  #0,Z80BUS
 
-        bsr.w   DrawCameras
-        jsr     UpdateHUD
-        bsr.w   DecompArtList.Slow
+	bsr.w   DrawCameras
+	bsr.w   DecompArtList.Slow
 
-        moveq   #0,d0
-        move.b  vblankUnk1.w,d0
-        move.b  vblankUnk2.w,d1
-        cmp.b   d0,d1
-        bcc.s   .Skip
-        move.b  d0,vblankUnk2.w
+	moveq   #0,d0
+	move.b  vblankUnk1.w,d0
+	move.b  vblankUnk2.w,d1
+	cmp.b   d0,d1
+	bcc.s   .Skip
+	move.b  d0,vblankUnk2.w
 
 .Skip:                                
-        move.b  #0,vblankUnk1.w
-        tst.w   genericTimer.w
-        beq.w   .Exit
-        subq.w  #1,genericTimer.w
+	move.b  #0,vblankUnk1.w
+	tst.w   genericTimer.w
+	beq.w   .Exit
+	subq.w  #1,genericTimer.w
 
 .Exit:                             
-        rts
+	rts
 
 
 ; ---------------------------------------------------------------------------
@@ -165,34 +164,34 @@ VBLANK_LEVEL:
 ; ---------------------------------------------------------------------------
 
 VBLANK_SPECIAL:                             
-        bsr.w   ReadJoypads
-        move.w  #$100,Z80BUS
+	bsr.w   ReadJoypads
+	move.w  #$100,Z80BUS
 
 .WaitZ80:                                
-        btst    #0,Z80BUS
-        bne.s   .WaitZ80
+	btst    #0,Z80BUS
+	bne.s   .WaitZ80
 
-        VDPDMA  palette,$0000,$80,CRAM,a5     ; Palette DMA
-        VDPDMA  sprites,$F800,$280,VRAM,a5    ; Sprite DMA
-        VDPDMA  hscroll,$FC00,$380,VRAM,a5    ; Hscroll DMA
+	VDPDMA  palette,$0000,$80,CRAM,a5     ; Palette DMA
+	VDPDMA  sprites,$F800,$280,VRAM,a5    ; Sprite DMA
+	VDPDMA  hscroll,$FC00,$380,VRAM,a5    ; Hscroll DMA
 
-        move.w  #0,Z80BUS
-        ;bsr.w   _specialstgPalCyc
+	move.w  #0,Z80BUS
+	;bsr.w   _specialstgPalCyc
 
-        tst.b   playerDrawFlag.w
-        beq.s   .NoSonicRedraw
+	tst.b   playerDrawFlag.w
+	beq.s   .NoSonicRedraw
 
-        VDPDMA  playDMABuffer,$F000,$2E0,VRAM,a5 ; Sonic art DMA
+	VDPDMA  playDMABuffer,$F000,$2E0,VRAM,a5 ; Sonic art DMA
 
-        move.b  #0,playerDrawFlag.w
+	move.b  #0,playerDrawFlag.w
 
 .NoSonicRedraw:                                
-        tst.w   genericTimer.w
-        beq.w   .TimerDone
-        subq.w  #1,genericTimer.w
+	tst.w   genericTimer.w
+	beq.w   .TimerDone
+	subq.w  #1,genericTimer.w
 
 .TimerDone:                             
-        rts
+	rts
 
 
 ; ---------------------------------------------------------------------------
@@ -200,27 +199,25 @@ VBLANK_SPECIAL:
 ; ---------------------------------------------------------------------------
 
 VBLANK_LVLSTART:                          
-        bsr.w   ReadJoypads
-        move.w  #$100,Z80BUS
+	bsr.w   ReadJoypads
+	move.w  #$100,Z80BUS
 
 .WaitZ80:                              
-        btst    #0,Z80BUS
-        bne.s   .WaitZ80
-        VDPDMA  palette,$0000,$80,CRAM,a5               ; Palette DMA
-        VDPDMA  sprites,$F800,$280,VRAM,a5              ; Sprite DMA
-        VDPDMA  hscroll,$FC00,$380,VRAM,a5              ; Hscroll DMA
-        tst.b   playerDrawFlag.w
-        beq.s   .NoSonicRedraw
-        VDPDMA  playDMABuffer,$F000,$2E0,VRAM,a5       ; Sonic art DMA
-        move.b  #0,playerDrawFlag.w
+	btst    #0,Z80BUS
+	bne.s   .WaitZ80
+	VDPDMA  palette,$0000,$80,CRAM,a5               ; Palette DMA
+	VDPDMA  sprites,$F800,$280,VRAM,a5              ; Sprite DMA
+	VDPDMA  hscroll,$FC00,$380,VRAM,a5              ; Hscroll DMA
+	tst.b   playerDrawFlag.w
+	beq.s   .NoSonicRedraw
+	VDPDMA  playDMABuffer,$F000,$2E0,VRAM,a5       ; Sonic art DMA
+	move.b  #0,playerDrawFlag.w
 
 .NoSonicRedraw:                        
-        move.w  #0,Z80BUS
-        bsr.w   DrawCameras
-        ;jsr     AnimatedLevelGFX
-        jsr     UpdateHUD
-        bsr.w   DecompArtList.Fast
-        rts
+	move.w  #0,Z80BUS
+	bsr.w   DrawCameras
+	bsr.w   DecompArtList.Fast
+	rts
 
 ; ---------------------------------------------------------------------------
 ; Unused routine that increments a timer. 
@@ -228,91 +225,98 @@ VBLANK_LVLSTART:
 ; ---------------------------------------------------------------------------
 
 VBLANK_TIMER:                                 
-        bsr.w   _vblVDPRefresh
-        bsr.w   RunObjects
-        bsr.w   DrawObjects
-        addq.b  #1,vblankUnk1.w
-        move.b  #VBCMD_TIMER,vblankCmd.w
-        rts
+	bsr.w   _vblVDPRefresh
+	bsr.w   RunObjects
+	bsr.w   DrawObjects
+	addq.b  #1,vblankUnk1.w
+	move.b  #VBCMD_TIMER,vblankCmd.w
+	rts
 
 ; ---------------------------------------------------------------------------
 ; Idle routine for palette functions, like fading in and out
 ; ---------------------------------------------------------------------------
 
 VBLANK_PALFUNC:                             
-        bsr.w   _vblVDPRefresh
-        bra.w   DecompArtList.Fast
+	bsr.w   _vblVDPRefresh
+	bra.w   DecompArtList.Fast
 
 ; ---------------------------------------------------------------------------
 ; Refresh VDP tile/sprite data with most recent buffer data in memory
 ; ---------------------------------------------------------------------------
 
 _vblVDPRefresh:                      
-        bsr.w   ReadJoypads
-        move.w  #$100,Z80BUS
+	bsr.w   ReadJoypads
+	move.w  #$100,Z80BUS
 
 .WaitZ80:                              
-        btst    #0,Z80BUS
-        bne.s   .WaitZ80
+	btst    #0,Z80BUS
+	bne.s   .WaitZ80
 
-        VDPDMA  palette,$0000,$80,CRAM,a5        ; Palette DMA
-        VDPDMA  sprites,$F800,$280,VRAM,a5    ; Sprite DMA
-        VDPDMA  hscroll,$FC00,$380,VRAM,a5       ; Hscroll DMA
+	VDPDMA  palette,$0000,$80,CRAM,a5        ; Palette DMA
+	VDPDMA  sprites,$F800,$280,VRAM,a5    ; Sprite DMA
+	VDPDMA  hscroll,$FC00,$380,VRAM,a5       ; Hscroll DMA
 
-        move.w  #0,Z80BUS
-        rts
+	move.w  #0,Z80BUS
+	rts
 
 ; ---------------------------------------------------------------------------
 ; HBLANK Routines
 ; ---------------------------------------------------------------------------
-; Early implementation of the water mid-screen palette swap, which uses DMA
-; The final game uses manual writes to VDPDATA which is quicker
-; due to requiring less setup
+; Swap plane location during active scan to display Plane Z 
 ; ---------------------------------------------------------------------------
 
 
 HBLANK:                                  
-        tst.w   hblankFlag.w
-        beq.s   .Exit
-        movem.l d0/a0/a5/a6,-(sp)
-        lea     VDPDATA,a5
-        lea     VDPCTRL,a6
-        move.w  #$8B00+%0000,(a6)
-        VDPCMD  move.l,$FC02,VRAM,WRITE,(a6)
+	tst.w   hblankFlag.w
+	beq.s   .Exit
+	movem.l d0/a0/a5,-(sp)
 
-        move.w  mainZPosX.w,d0 
-        neg.w   d0
-        move.w  d0,(a5)
+	move.w  #0,hblankFlag.w
+	move.w  #$8405,VDPCTRL
+	move.w  #$857C,VDPCTRL
 
-        VDPCMD  move.l,$0002,VSRAM,WRITE,(a6)
-        move.w  hblankZPosY.w,(a5)
+; -----------------------------------
+; Multiplexing test???
+; Assuming this is unused right now.
+; -----------------------------------
 
-        move.w  #$8405,(a6)
-        move.w  #$857C,(a6)
+;	move.l  #$78000003,VDPCTRL      ; DO_WRITE_TO_VRAM_AT_$F800_ADDR
+;	lea     sprites.w,a0
+;	lea     VDPDATA,a5
+;	move.w  #$A0-1,d0
+;.WriteSprites:                         
+;	move.l  (a0)+,(a5)
+;	dbf     d0,.WriteSprites
 
- ;       move.l  #$78000003,VDPCTRL
- ;       lea     sprites.w,a0
- ;       lea     VDPDATA,a5
- ;       move.w  #$A0/8-1,d0
-
-.WriteSprites:                         
-;        move.l  (a0)+,(a5)
-;        move.l  (a0)+,(a5)
-;        move.l  (a0)+,(a5)
-;        move.l  (a0)+,(a5)
-;        move.l  (a0)+,(a5)
-;        move.l  (a0)+,(a5)
-;        move.l  (a0)+,(a5)
-;        move.l  (a0)+,(a5)
-;        dbf     d0,.WriteSprites
-        movem.l (sp)+,d0/a0/a5/a6
-        move.w  #0,hblankFlag.w
+	movem.l (sp)+,d0/a0/a5
 .Exit:                                 
-        rte
+	rte
 
 ; ---------------------------------------------------------------------------
-; !!!!!!!!!!!!!!!!!!!!!!!!!!
+; This is a better method of doing this I'm just going to leave here 
+; Feel free to use it for reference
 ; ---------------------------------------------------------------------------
 
-UpdateHUD:
-        rts
+;HBLANK:                                  
+;	tst.w   hblankFlag.w
+;	beq.s   .Exit
+;	movem.l d0/a0/a5/a6,-(sp)
+;	lea     VDPDATA,a5
+;	lea     VDPCTRL,a6
+;	move.w  #$8B00+%0000,(a6)
+;	VDPCMD  move.l,$FC02,VRAM,WRITE,(a6)
+;
+;	move.w  mainZPosX.w,d0 
+;	neg.w   d0
+;	move.w  d0,(a5)
+;
+;	VDPCMD  move.l,$0002,VSRAM,WRITE,(a6)
+;	move.w  hblankZPosY.w,(a5)
+;
+;	move.w  #$8405,(a6)
+;	move.w  #$857C,(a6)
+;       move.w  #0,hblankFlag.w
+;	movem.l (sp)+,d0/a0/a5/a6
+;
+;.Exit:                                 
+;	rte
