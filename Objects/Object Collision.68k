@@ -6,8 +6,8 @@
 ; ---------------------------------------------------------------------------
 ; local enums
 
-PHYS_UPMAX      EQU     14              ; Max distances to register on floor
-PHYS_DOWNMAX    EQU     -14             
+PHYS_UPMAX      EQU     4              ; Max distances to register on floor
+PHYS_DOWNMAX    EQU     -4             
 PHYS_GRAVITY    EQU     56              ; Gravity delta
 PHYS_LIFTFLAG   EQU     3               ; "Lifted" numerical flag
 

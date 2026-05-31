@@ -89,20 +89,24 @@ GM_LEVEL:
 .SkipManualCam:
 
 ; DEV DEV DEV DEV DEV DEV DEV DEV DEV DEV DEV DEV DEV DEV DEV 
+	move.w  #0,joypadMirr.w
+	move.w  #0,joypad.w
+	bsr.w   GetObjects
+	bsr.w   RunObjects                        
+	bsr.w   DrawObjects
 
 	lea     DemoData,a1
 	move.b  1(a1),demoHeldTime.w
 	subq.b  #1,demoHeldTime.w
-	move.w  #1800,genericTimer.w
-	move.w  #0,joypadMirr.w
-	move.w  #0,joypad.w
+	move.w  #1200,genericTimer.w
+
+
 	move.b  #VBCMD_LEVEL,vblankCmd.w
 	bsr.w   VSync
-
-	move.w  #$202F,palFadeArgs.w
-	bsr.w   PalFadeIn.UserArgs
 	move.w  #$8000+%00010100,VDPCTRL
+	bsr.w   PalFadeIn
 	bsr.w   DebugArtLoad
+
 LevelLoop:                              
 	bsr.w   PauseGame
 ;	bsr.w	DebugReportInfo
@@ -120,12 +124,10 @@ LevelLoop:
 	bsr.w   DrawObjects
 	bsr.w   ProcessArtLoading
 
-	tst.w   restart.w
-	bne.w   GM_LEVEL
-
-	cmpi.b  #GMNO_LEVEL,gamemode.w
-	beq.w   LevelLoop
-	rts 
+	tst.w	genericTimer.w
+	bne.s	LevelLoop
+	move.b	#0,gamemode.w
+	rts
 
 .DemoFadeInit:
 	tst.w   restart.w
