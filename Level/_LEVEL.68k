@@ -36,8 +36,8 @@ GM_LEVEL:
 .ClearCams:                            
 	move.l  d0,(a1)+
 	dbf     d1,.ClearCams
-	moveq   #3,d0
-	bsr.w   PalLoad
+;	moveq   #3,d0
+;	bsr.w   PalLoad
 	moveq   #0,d0
 	move.b  zone.w,d0
 
