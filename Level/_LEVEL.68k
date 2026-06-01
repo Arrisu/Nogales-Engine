@@ -123,15 +123,13 @@ LevelLoop:
 	
 	bsr.w   DrawObjects
 	bsr.w   ProcessArtLoading
-
-	tst.w	genericTimer.w
-	bne.s	LevelLoop
-	move.b	#0,gamemode.w
+ 	cmpi.b	#GMNO_DEMO,gamemode.w
+        beq.s   .DoDemo
+	cmpi.b	#GMNO_LEVEL,gamemode.w
+	beq.w	LevelLoop
 	rts
 
-.DemoFadeInit:
-	tst.w   restart.w
-	bne.s   .NotDone
+.DoDemo:
 	tst.w   genericTimer.w
 	beq.s   .NotDone
 	cmpi.b  #GMNO_DEMO,gamemode.w
