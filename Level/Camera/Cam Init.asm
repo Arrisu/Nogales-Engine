@@ -47,7 +47,7 @@ InitScrollBlocks:
 InitBgCams:                             
         move.w  d0,cameraBPosY.w
         move.w  d0,cameraCPosY.w                         
-        move.w  #20,cameraAPosY.w
+        move.w  #16,cameraAPosY.w
         move.w  #32,cameraBPosY.w
         move.w  #32,cameraZPosY.w
         move.w  d0,cameraAPosX.w

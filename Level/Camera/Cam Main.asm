@@ -85,7 +85,7 @@ CameraScroll:
 
 	; Set mountains scroll speed
 
-	move.w  #(172-(32+28))-1,d1               ; Set abs. size of initial scroll
+	move.w  #(176-(32+28))-1,d1               ; Set abs. size of initial scroll
 	move.w  cameraBPosX.w,d0
 	neg.w   d0
 
@@ -95,7 +95,7 @@ CameraScroll:
 
 	; Set cities scroll speed
 
-	move.w  #36-1,d1
+	move.w  #32-1,d1
 	move.w  cameraCPosX.w,d0
 	neg.w   d0
 
