@@ -59,8 +59,8 @@ HEADER:
 GAME_ID:
 		dc.b 'SEGA MEGA DRIVE '
 		dc.b '(C)SEGA 1989.JAN'
-		dc.b '                                                '
-		dc.b '                                                '
+		dc.b 'SONIC THE HEDGEHOG 1990 AUTODEMO REMAKE         '
+		dc.b 'SONIC THE HEDGEHOG 1990 AUTODEMO REMAKE         '
 		dc.b 'GM 00000000-00'
 CHECKSUM:       dc.w     0              
 PERIPHERALS:    dc.b 'J               '
