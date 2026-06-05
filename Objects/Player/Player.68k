@@ -114,7 +114,7 @@ Player_Main:
 
         move.b  angleFront.w,play.FootFront(a0)
         move.b  angleBack.w,play.FootBack(a0)
-
+        bsr.w   _playLevelLimits
         move.w  obj.Momentum(a0),d0
         bpl.s   .Abs
         neg.w   d0
