@@ -188,17 +188,17 @@ _cameraASetX:
 .GetPlayPos:                           
 	move.w  objSlot00+obj.X.w,d0
 	sub.w   cameraAPosX.w,d0
-	subi.w  #128,d0
+	subi.w  #130,d0
 	bcs.s   .BehindMid
-	subi.w  #44,d0
+	subi.w  #46,d0
 	bcc.s   .AheadMid
 	clr.w   camADiffX.w
 	rts
 
 .AheadMid:                             
-	cmpi.w  #44,d0
+	cmpi.w  #46,d0
 	bcs.s   .InScrCenter
-	move.w  #44,d0
+	move.w  #46,d0
 
 .InScrCenter:                          
 	add.w   cameraAPosX.w,d0
