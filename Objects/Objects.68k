@@ -2,7 +2,7 @@
 ; Main Objects handling and function libraries
 ; ---------------------------------------------------------------------------
 ; enums
-OBJ.GRAVITY    EQU     56              ; Gravity delta
+OBJ.GRAVITY    EQU     48             ; Gravity delta
 
 obj             struct
 No:             dc.b 1
@@ -130,7 +130,7 @@ ObjectIndex:
 	OBJDEF	ObjDummy,		OBJNO_DEV6		; 7
 	OBJDEF	ObjPlaneZ,		OBJNO_PLANEZ		; 8
 	OBJDEF	ObjPlayerTest,		OBJNO_PLAYSPECIAL	; 9
-	OBJDEF	ObjDummy					; A
+	OBJDEF	ObjPlayerRef,		OBJNO_PLAYERREF		; A
 	OBJDEF	ObjDummy					; B
 	OBJDEF	ObjDummy					; C
 	OBJDEF	ObjDummy					; D

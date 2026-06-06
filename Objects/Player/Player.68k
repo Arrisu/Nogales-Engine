@@ -90,7 +90,7 @@ Player_Init:
 
         move.w  #$600,playerMaxSpeed.w  ; Reset player phys. deltas
         move.w  #18,playerAccel.w
-        move.w  #26,playerDecel.w
+        move.w  #24,playerDecel.w
 
 
 Player_Main:                             
@@ -116,16 +116,20 @@ Player_Main:
         move.b  angleBack.w,play.FootBack(a0)
         bsr.w   _playLevelLimits
         move.w  obj.Momentum(a0),d0
+        bne.s   .Skip3
+        move.b  #4,obj.Anim(a0)
+        bra.s   .Skip2
+.Skip3
         bpl.s   .Abs
         neg.w   d0
 .Abs
         cmpi.w  #$600,d0
         bne.s   .NotMax
-        moveq   #1,d0
-        move.b  d0,obj.Anim(a0)
+        move.b  #1,obj.Anim(a0)
         bra.s   .Skip2
 
 .NotMax
+        move.b  #0,obj.Anim(a0)
         asr.w   #7,d0
         eor.b   #$F,d0
         sub.b   #1,d0
@@ -173,7 +177,7 @@ Player_AirCtrl:                                  ; Status air bit set
 
 Player_RollCtrl:                                 ; Status roll bit set
         bsr.w   _playJumpChk
-;        bsr.w   _physRollDown
+        bsr.w   _physRollDown
         bsr.w   _playRollCalc
         bsr.w   _objectSetSpeed
         bsr.w   _physFootCollision
@@ -313,7 +317,8 @@ _playHitWall:
 
 _playMoveLeft:                          
         move.w  obj.Momentum(a0),d0
-                          
+        bpl.s   .Skidding
+
         bset    #PHYS.DIR,obj.Status(a0)
         bne.s   .FacingLeft
 
@@ -332,12 +337,22 @@ _playMoveLeft:
         move.b  #0,obj.Anim(a0)         ; Set walking anim.
         rts
 
+.Skidding:                             
+        sub.w   d4,d0
+        bcc.s   .StillMoving
+        move.w  #-$80,d0
+
+.StillMoving:                          
+        move.w  d0,obj.Momentum(a0)     ; Get momentum w/ parity                                
+        rts
+
 ; ---------------------------------------------------------------------------
 ; Move player right
 ; ---------------------------------------------------------------------------
 
 _playMoveRight:                         
         move.w  obj.Momentum(a0),d0
+        bmi.s   .Skidding
 
         bclr    #PHYS.DIR,obj.Status(a0)
         beq.s   .FacingRight
@@ -354,6 +369,15 @@ _playMoveRight:
 .BelowLimit:                           
         move.w  d0,obj.Momentum(a0)    
         move.b  #0,obj.Anim(a0)
+        rts
+
+.Skidding:                             
+        add.w   d4,d0
+        bcc.s   .StillMoving
+        move.w  #$80,d0
+
+.StillMoving:                          
+        move.w  d0,obj.Momentum(a0)     ; Get momentum w/ parity                               
         rts
 
 ; ---------------------------------------------------------------------------
@@ -725,7 +749,7 @@ _physUpSlope:
         bcc.s   .Ceiling
         move.b  obj.Angle(a0),d0
         jsr     CalcSinCos
-        muls.w  #64,d0
+        muls.w  #128,d0
         asr.l   #8,d0
         tst.w   obj.Momentum(a0)
         beq.s   .Ceiling

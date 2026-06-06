@@ -133,10 +133,10 @@ VBLANK_LEVEL:
 	beq.s   .NoSonicRedraw
 
 	VDPDMA  playDMABuffer,$F000,$2E0,VRAM,a5 ; Sonic art DMA
-
 	move.b  #0,playerDrawFlag.w
 
 .NoSonicRedraw:                                
+			bsr.w   ProcessDMAQueue	; !!!TEMPORARY!!!
 	move.w  #0,Z80BUS
 
 	bsr.w   DrawCameras
