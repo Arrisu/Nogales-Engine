@@ -21,7 +21,7 @@ PlaneZ_Init:
 
 	move.l  #SprPat_PlaneZ,obj.Pat(a0)
 	move.w  #$4000,obj.Tile(a0)
-        move.b  #56,obj.XRender(a0)
+        move.b  #32,obj.XRender(a0)
 	move.b	obj.Args(a0),obj.Frame(a0)
 	move.b  #%1100,obj.Render(a0) 	; Render with CamZ
 	move.b  #1,obj.ColliCnt(a0)

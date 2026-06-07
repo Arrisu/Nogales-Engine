@@ -1,0 +1,51 @@
+; ---------------------------------------------------------------------------
+; Grass overlay object, to make the grass overlay on top of Sonic
+; when he walks over the bush. It only displays if Sonic's close enough.
+; ---------------------------------------------------------------------------
+
+GRASS_VRAM	=	0
+
+ObjGrass:
+	moveq   #0,d0
+	move.b  obj.Action(a0),d0
+	move.w  .Index(pc,d0.w),d1
+	jmp     .Index(pc,d1.w)
+
+; ---------------------------------------------------------------------------
+
+.Index:                                
+	dc.w	.init-.Index		; 0
+	dc.w	.main-.Index		; 2
+	
+; ---------------------------------------------------------------------------
+
+.init:
+	addq.b	#2,obj.Action(a0)
+	move.b	obj.Status(a0),obj.Frame(a0)
+	move.b	#0,obj.YRad(a0)
+	move.b	#0,obj.XRender(a0)
+	move.w	#GRASS_VRAM/32+$C000,obj.Tile(a0)
+	move.l	#SprPat_Grass,obj.Pat(a0)
+	ori.b	#%100,obj.Render(a0)
+	move.b	#1,obj.Priority(a0) ; one over sonic
+	
+; ---------------------------------------------------------------------------
+
+.grassRad = 48
+
+.main:
+	lea	objSlot00,a1	;	player
+	move.w	obj.X(a0),d0	;	grass
+	sub.w	obj.X(a1),d0	;	player
+	move.w	d0,levelChunks
+	cmpi.w	#.grassRad,d0
+	bge.s	.nodraw
+	cmpi.w	#-.grassRad,d0
+	blt.s	.nodraw
+	bra.w	_objectDraw
+.nodraw:
+	rts
+	
+SprPat_Grass:
+	include		"Objects/Grass/GRASS_PAT.asm"
+	even

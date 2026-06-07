@@ -131,7 +131,7 @@ ObjectIndex:
 	OBJDEF	ObjPlaneZ,		OBJNO_PLANEZ		; 8
 	OBJDEF	ObjPlayerTest,		OBJNO_PLAYSPECIAL	; 9
 	OBJDEF	ObjPlayerRef,		OBJNO_PLAYERREF		; A
-	OBJDEF	ObjDummy					; B
+	OBJDEF	ObjGrass,		OBJNO_GRASS		; B
 	OBJDEF	ObjDummy					; C
 	OBJDEF	ObjDummy					; D
 	OBJDEF	ObjTitleMisc,		OBJNO_TITLEMISC		; E
