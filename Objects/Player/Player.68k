@@ -505,7 +505,7 @@ _playAirCtrl:
         move.w  obj.XSpeed(a0),d0
         btst    #2,joypad1.w
         beq.s   .NotLeft
-        bset    #PHYS.DIR,obj.Status(a0)
+;       bset    #PHYS.DIR,obj.Status(a0)
         sub.w   d5,d0
         move.w  d6,d1
         neg.w   d1
@@ -516,7 +516,7 @@ _playAirCtrl:
 .NotLeft:                              
         btst    #3,joypad1.w
         beq.s   .SetSpeed
-        bclr    #PHYS.DIR,obj.Status(a0)
+;       bclr    #PHYS.DIR,obj.Status(a0)
         add.w   d5,d0
         cmp.w   d6,d0
         blt.s   .SetSpeed
