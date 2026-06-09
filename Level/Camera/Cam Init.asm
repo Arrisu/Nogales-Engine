@@ -16,7 +16,7 @@ CameraInit:
 
 InitPlayerInfo:                    
         move.w  #$80,objSlot00+obj.X.w
-        move.w  #$B0,objSlot00+obj.Y.w
+        move.w  #$A8,objSlot00+obj.Y.w
         bsr.w   InitBgCams
         move.w  #$2000,limitARight.w
         move.w  #$2000,eventLimARight.w

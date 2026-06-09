@@ -107,15 +107,16 @@ GM_LEVEL:
 	bsr.w   PalFadeIn
 	bsr.w   DebugArtLoad
 
-LevelLoop:                              
+LevelLoop:
+	bsr.w   RunDemo
+	move.w  joypad.w,joypadMirr.w
+                       
 	bsr.w   PauseGame
 ;	bsr.w	DebugReportInfo
 	move.b  #VBCMD_LEVEL,vblankCmd.w
 	bsr.w   VSync
 	addq.w  #1,frameCnt.w
 	bsr.w   SetHblankLine
-	bsr.w   RunDemo
-	move.w  joypad.w,joypadMirr.w
 
 	bsr.w   GetObjects
 	bsr.w   RunObjects                        
