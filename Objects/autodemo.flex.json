@@ -1,8 +1,28 @@
 {
     "Flex": 2,
     "name": "",
-    "node": "c45c6575-abed-4c4c-a9eb-9633d228e0a8",
+    "node": "5365b32c-5bc6-45e6-bc2a-a6829cdf3a35",
     "objects": [
+        {
+            "format": "Sonic 1.js",
+            "name": "Enemy",
+            "palettes": [],
+            "art": {
+                "path": "Enemy/ENEMY_ART.nem",
+                "compression": "Nemesis",
+                "offset": 0
+            },
+            "mappings": {
+                "path": "Enemy/ENEMY_PAT.asm",
+                "label": ""
+            },
+            "dplcs": {
+                "enabled": false,
+                "path": "",
+                "label": ""
+            },
+            "uuid": "5365b32c-5bc6-45e6-bc2a-a6829cdf3a35"
+        },
         {
             "format": "Sonic 1.js",
             "name": "Player",
@@ -24,61 +44,33 @@
             "uuid": "c45c6575-abed-4c4c-a9eb-9633d228e0a8"
         },
         {
-            "name": "Scenery",
-            "children": [
+            "format": "Sonic 1.js",
+            "name": "Plane Z",
+            "palettes": [
                 {
-                    "format": "Sonic 1.js",
-                    "name": "Player Ref",
-                    "palettes": [],
-                    "art": {
-                        "path": "Player/Data/PLAYER_ART_REF.nem",
-                        "compression": "Nemesis",
-                        "offset": 0
-                    },
-                    "mappings": {
-                        "path": "Player/Data/PLAYER_PAT_REF.asm",
-                        "label": ""
-                    },
-                    "dplcs": {
-                        "enabled": false,
-                        "path": "Player/Data/PLAYER_DGFX.asm",
-                        "label": ""
-                    },
-                    "uuid": "7eec43cf-9d9a-4732-9ced-6b4892c53ee1"
+                    "path": "../Level/Data/Palettes/Sonic.bin",
+                    "length": 1
                 },
                 {
-                    "format": "Sonic 1.js",
-                    "name": "Plane Z",
-                    "palettes": [
-                        {
-                            "path": "../Level/Data/Palettes/Sonic.bin",
-                            "length": 1
-                        },
-                        {
-                            "path": "../Level/Data/Palettes/Green Hill.bin",
-                            "length": 3
-                        }
-                    ],
-                    "art": {
-                        "path": "../Level/Data/Art/GHZ1.nem",
-                        "compression": "Nemesis",
-                        "offset": 0
-                    },
-                    "mappings": {
-                        "path": "PlaneZ/PLANEZ_PAT.asm",
-                        "label": ""
-                    },
-                    "dplcs": {
-                        "enabled": false,
-                        "path": "",
-                        "label": ""
-                    },
-                    "uuid": "c673c9f4-b22d-4d64-b06d-9dde515456eb"
+                    "path": "../Level/Data/Palettes/Green Hill.bin",
+                    "length": 3
                 }
             ],
-            "isDirectory": true,
-            "expanded": true,
-            "uuid": "d9c8c286-b203-4e43-af80-afd5d1ae9d34"
+            "art": {
+                "path": "../Level/Data/Art/GHZ1.nem",
+                "compression": "Nemesis",
+                "offset": 0
+            },
+            "mappings": {
+                "path": "PlaneZ/PLANEZ_PAT.asm",
+                "label": ""
+            },
+            "dplcs": {
+                "enabled": false,
+                "path": "",
+                "label": ""
+            },
+            "uuid": "c673c9f4-b22d-4d64-b06d-9dde515456eb"
         }
     ]
 }

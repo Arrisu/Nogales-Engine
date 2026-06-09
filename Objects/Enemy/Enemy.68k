@@ -1,0 +1,38 @@
+; ---------------------------------------------------------------------------
+; Enemy Object Code (known informally as "Big-Jaw", "Goblin", or "Imp")
+; ---------------------------------------------------------------------------
+
+ENEMY_VRAM = $8000
+ENEMY_GFX = (ENEMY_VRAM/32)+$2000
+
+ObjEnemy:
+        moveq   #0,d0
+        move.b  obj.Action(a0),d0
+        move.w  .Index(pc,d0.w),d1
+        jmp     .Index(pc,d1.w)
+
+; ---------------------------------------------------------------------------
+.Index:
+        dc.w Enemy_Init-.Index
+        dc.w Enemy_Main-.Index
+        dc.w Enemy_Done-.Index
+; ---------------------------------------------------------------------------
+
+Enemy_Init:
+	move.l  #SprPat_Enemy,obj.Pat(a0)
+	move.w  #ENEMY_GFX,obj.Tile(a0)
+	move.b  #4,obj.Render(a0)
+	move.b  #4,obj.Priority(a0)
+	move.b  #24,obj.XRender(a0)
+
+Enemy_Main:
+ 	bra.w	_objectDraw
+
+; ---------------------------------------------------------------------------
+
+Enemy_Done:
+	bsr.w   _objectDelete
+	rts
+	
+SprPat_Enemy:
+	include	"Objects/Enemy/ENEMY_PAT.asm"
