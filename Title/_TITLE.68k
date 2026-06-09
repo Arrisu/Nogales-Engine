@@ -69,17 +69,17 @@ GM_TITLE:
       ; Load layer B
 
       lea     MapScr_TITLEB,a1
-      VDPCMD  move.l,$E000+((2*2)+(5*$80)),VRAM,WRITE,d0   ; Set VRAM write address
-      moveq   #33-1,d1
-      moveq   #17-1,d2
+      VDPCMD  move.l,$E000+((3*2)+(4*$80)),VRAM,WRITE,d0   ; Set VRAM write address
+      moveq   #32-1,d1
+      moveq   #11-1,d2
       bsr.w   DrawTileMap
 
       ; Load layer A
 
       lea     MapScr_TITLEA,a1
-      VDPCMD  move.l,$C000+((5*2)+(13*$80)),VRAM,WRITE,d0   ; Set VRAM write address
-      moveq   #27-1,d1
-      moveq   #11-1,d2
+      VDPCMD  move.l,$C000+((6*2)+(13*$80)),VRAM,WRITE,d0   ; Set VRAM write address
+      moveq   #26-1,d1
+      moveq   #9-1,d2
       bsr.w   DrawTileMap
 
         ; This next code is the smoking gun:
