@@ -57,30 +57,30 @@ GM_TITLE:
         ; The tilemap input sizes are also different.
         ; -------------------------------------------------------------------
 
-        VDPCMD  move.l,$4000,VRAM,WRITE,d0   ; Set VRAM write address
-        lea     ArtNem_TitleBanner,a0                  
-        bsr.w   NemDec
+      VDPCMD  move.l,$20,VRAM,WRITE,VDPCTRL   ; Set VRAM write address
+      lea     ArtNem_TitleBanner,a0                  
+      bsr.w   NemDec
 
-        move.l  #$60400001,VDPCTRL
-        lea     ArtNem_TitleSonic,a0 ; load Sonic title screen patterns
-        bsr.w   NemDec
+      move.l  #$60400001,VDPCTRL
+      lea     ArtNem_TitleSonic,a0 ; load Sonic title screen patterns
+      bsr.w   NemDec
 
 
-        ; Load layer B
+      ; Load layer B
 
-        lea     MapScr_TITLE,a1
-        VDPCMD  move.l,$E280,VRAM,WRITE,d0   ; Set VRAM write address
-        moveq   #21,d1
-        moveq   #17,d2
-        bsr.w   DrawTileMap
+      lea     MapScr_TITLEB,a1
+      VDPCMD  move.l,$E000+((2*2)+(5*$80)),VRAM,WRITE,d0   ; Set VRAM write address
+      moveq   #33-1,d1
+      moveq   #17-1,d2
+      bsr.w   DrawTileMap
 
-        ; Load layer A
+      ; Load layer A
 
-        lea     MapScr_TITLE,a1
-        VDPCMD  move.l,$C206,VRAM,WRITE,d0   ; Set VRAM write address
-        moveq   #21,d1
-        moveq   #17,d2
-        bsr.w   DrawTileMap
+      lea     MapScr_TITLEA,a1
+      VDPCMD  move.l,$C000+((5*2)+(13*$80)),VRAM,WRITE,d0   ; Set VRAM write address
+      moveq   #27-1,d1
+      moveq   #11-1,d2
+      bsr.w   DrawTileMap
 
         ; This next code is the smoking gun:
         ; - The text data is loaded exactly the same as in our prototype.

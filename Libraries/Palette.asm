@@ -484,7 +484,7 @@ palentr	macro	dataddr, off, size
 PaletteIndex:	      
 ; 	         Data       Color num.	       Size
 	palentr  Pal_LOGO,	0,		64
-        palentr  Pal_TITLE,	0,		64
+        palentr  Pal_TITLE,	0,		32
         palentr  Pal_SELECT,	0,		64
         palentr  Pal_Sonic,	0,		16
         palentr  Pal_GHZ,	16,		48
@@ -512,14 +512,6 @@ Pal_TITLE:      dc.b  $A,$20,  6,  0, $C,  0, $E,$44
                 dc.b  $E,$66, $E,$88, $E,$EE, $A,$AA
                 dc.b   8,$88,  6,$66,  4,$44,  2,$48
                 dc.b   8,$AE,  6,$8C,  0,  0,  0, $E
-                dc.b   8,  0,  0,  2, $E,$EE,  0,$26
-                dc.b   0,$48,  0,$6C,  0,$8E,  0,$CE
-                dc.b  $C,$42, $E,$86, $E,$CA, $E,$EC
-                dc.b   0,$40,  0,$60,  0,$A4,  0,$E8
-                dc.b  $C,$82, $A,  2, $C,$42, $E,$86
-                dc.b  $E,$CA, $E,$EC, $E,$EE, $E,$AC
-                dc.b  $E,$8A, $E,$68,  0,$E8,  0,$A4
-                dc.b   0,  2,  0,$26,  0,$6C,  0,$CE
 Pal_SELECT:     dc.b   0,  0,  0,  0,  0,  2,  0,  2 
                 dc.b   2,$24,  2,$24,  4,$46,  4,$46
                 dc.b   2,$24,  2,$24,  4,$46,  6,$68

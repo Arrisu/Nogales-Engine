@@ -1,0 +1,10 @@
+input "B.png"
+output "B.art"
+output2 "../TITLE_SCR_B.map"
+offset continuous
+offset 1
+map 0 0 33 17
+
+input "A.png"
+output2 "../TITLE_SCR_A.map"
+map 0 0 27 11

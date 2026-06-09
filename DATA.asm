@@ -4,12 +4,18 @@ ArtNem_LOGO:
 MapScr_LOGO:
 	incbin  "Logo/LOGO_SCR.eni"
 
-MapScr_TITLE:
-	incbin  "Title/TITLE_SCR_A.bin"
+MapScr_TITLEA:
+	incbin  "Title/TITLE_SCR_A.map"
+	even
+MapScr_TITLEB:
+	incbin  "Title/TITLE_SCR_B.map"
+	even
 ArtNem_TitleBanner:
 	incbin  "Title/TITLE_BANNER_ART.nem"
+	even
 ArtNem_TitleSonic:
 	incbin  "Title/TITLE_SONIC_ART.nem"
+	even
 
 		ALIGN   $1C000
 
