@@ -64,7 +64,7 @@ CameraScroll:
 	;       add.l   d1,d4
 
 	bsr.w   _cameraZSetX
-
+	andi.w	#$3FF,cameraZPosX.w
 	lea     hscroll.w,a1            ; Start calculating new scroll info
 
 
