@@ -72,8 +72,6 @@ RunObjects:
 	lea     OBJECTRAM.w,a0
 	moveq   #96-1,d7
 	moveq   #0,d0
-	cmpi.b  #6,objSlot00 ; Sonic routine counter
-	bcc.s   .Paused
 
 .RunObjLoop:                       
 	move.b  obj.No(a0),d0
@@ -89,23 +87,6 @@ RunObjects:
 	dbf     d7,.RunObjLoop
 	rts
 
-.Paused:                               
-	moveq   #32-1,d7
-	bsr.s   .RunObjLoop
-	moveq   #96-1,d7
-
-.PauseObjLoop:                         
-	moveq   #0,d0
-	move.b  obj.No(a0),d0
-	beq.s   .SkipDisplay
-	tst.b   obj.Render(a0)
-	bpl.s   .SkipDisplay
-	bsr.w   _objectDraw     ; Only display sprites while paused
-
-.SkipDisplay:                          
-	lea     OBJSZ(a0),a0
-	dbf     d7,.PauseObjLoop
-	rts
 
 ; ---------------------------------------------------------------------------
 ; Macro to create ids from objects
@@ -582,7 +563,8 @@ GetObjects_Main:
 	cmp.w   camAChunkX.w,d6         ; Check against chunk value
 	beq.w   _getobjZ                ; Exit if within same chunk 
 	bge.s   _getobjRight            ; Get rightward if from chunk ahead  
-
+	rts
+	
 ; ---------------------------------------------------------------------------
 ; Get and spawn objects for leftwards camera movement 
 ; ---------------------------------------------------------------------------

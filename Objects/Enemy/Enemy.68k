@@ -3,7 +3,7 @@
 ; ---------------------------------------------------------------------------
 
 ENEMY_VRAM = $8000
-ENEMY_GFX = (ENEMY_VRAM/32)+$2000
+ENEMY_GFX = (ENEMY_VRAM/32);+$2000
 
 ObjEnemy:
         moveq   #0,d0
@@ -16,23 +16,86 @@ ObjEnemy:
         dc.w Enemy_Init-.Index
         dc.w Enemy_Main-.Index
         dc.w Enemy_Done-.Index
+        dc.w Enemy_Show-.Index
 ; ---------------------------------------------------------------------------
 
 Enemy_Init:
+	tst.b	obj.Args(a0)
+	beq.s	.Go
+	move.b	obj.Args(a0),obj.Frame(a0)
+	addq.b	#6,obj.Action(a0)
+	or.b	#4,obj.Render(a0)
 	move.l  #SprPat_Enemy,obj.Pat(a0)
 	move.w  #ENEMY_GFX,obj.Tile(a0)
-	move.b  #4,obj.Render(a0)
 	move.b  #4,obj.Priority(a0)
 	move.b  #24,obj.XRender(a0)
+	rts
+.Go:
+        move.b  #19,obj.YRad(a0)
+        move.b  #9,obj.XRad(a0)  
+
+	move.l  #SprPat_Enemy,obj.Pat(a0)
+	move.w  #ENEMY_GFX,obj.Tile(a0)
+	move.b	#4,obj.Render(a0)
+	move.b  #4,obj.Priority(a0)
+	move.b  #24,obj.XRender(a0)
+	move.b	#255,dev.Timer+1(a0)
+
+    	bsr.w	_objectFall
+	bsr.w	_physBasicChkDown
+	tst.w	d1
+	bpl.s   .NoFloor
+	add.w	d1,obj.Y(a0)
+	addq.b	#2,obj.Action(a0)
+.NoFloor:
+	rts
 
 Enemy_Main:
+	subq.b  #1,dev.Timer+1(a0)	; Wait timer 1 depleted
+	bne.s	.Go
+	addq.b	#2,obj.Action(a0)
+	move.b	#3,obj.Frame(a0)
+	move.w	#-$500,obj.YSpeed(a0)
+	move.w	#-$200,obj.XSpeed(a0)
+.Go
+       	andi.w  #$FF,obj.Y(a0)        	; Clamp Y pos. to 256 pix. max    
+	subq.b  #1,dev.Timer(a0)	; Wait timer 2 depleted
+	bpl.s   .Wait
+	move.b  #16,dev.Timer(a0)       ; Reset it
+
+	move.b  obj.Frame(a0),d0
+	addq.b  #1,d0  			; Increment frame
+	cmpi.b  #3,d0 			; If frame number is 2 then cap
+	bcs.s   .ChangeFrame
+
+	moveq   #1,d0
+
+.ChangeFrame:                          
+	move.b  d0,obj.Frame(a0)
+
+.Wait:                                 
+	bra.w	_objectDraw
+
+Enemy_Done:
+    	bsr.w	_objectFall
+	tst.w	obj.YSpeed(a0)
+	bmi.s	.Wait
+	move.b	#4,obj.Frame(a0)
+	bsr.w	_physBasicChkDown
+	tst.w	d1
+	bpl.s   .Wait
+	add.w	d1,obj.Y(a0)
+	addq.b	#2,obj.Action(a0)
+	bset	#REND.XMIRR,obj.Render(a0)
+	move.b	#1,obj.Frame(a0)
+
+.Wait:
+	bra.w	_objectDraw
+
+Enemy_Show:
  	bra.w	_objectDraw
 
 ; ---------------------------------------------------------------------------
 
-Enemy_Done:
-	bsr.w   _objectDelete
-	rts
-	
 SprPat_Enemy:
 	include	"Objects/Enemy/ENEMY_PAT.asm"

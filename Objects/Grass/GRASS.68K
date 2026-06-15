@@ -16,6 +16,7 @@ ObjGrass:
 .Index:                                
 	dc.w	.init-.Index		; 0
 	dc.w	.main-.Index		; 2
+	dc.w	.disp-.Index		; 4
 	
 ; ---------------------------------------------------------------------------
 
@@ -42,6 +43,8 @@ ObjGrass:
 	bge.s	.nodraw
 	cmpi.w	#-.grassRad,d0
 	blt.s	.nodraw
+	addq.b	#2,obj.Action(a0)
+.disp
 	bra.w	_objectDraw
 .nodraw:
 	rts

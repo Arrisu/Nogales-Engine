@@ -13,7 +13,18 @@ PLANE_B         =  $E000
 
 ; ---------------------------------------------------------------------------
 
-CameraScroll:                           
+CameraScroll:
+        btst    #6,joypadPress.w    ; Turn on editor if A pressed
+        beq.s   .Skip
+
+        eor.w  #1,editMode.w
+   
+
+.Skip
+	tst.w	editMode.w
+	beq.s	.Go
+	rts
+.Go
 	tst.b   cameraLock.w
 	bne.s   .SetBGScroll
 	tst.b   autoscrollX.w

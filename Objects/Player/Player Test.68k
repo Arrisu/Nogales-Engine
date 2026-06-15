@@ -15,8 +15,8 @@ TestAnims_Init:
         addq.b  #2,obj.Action(a0)
         move.b  #18,obj.YRad(a0)
         move.b  #9,obj.XRad(a0)
-        move.l  #SprPat_PlaySonic,obj.Pat(a0)
-        move.w  #$780,obj.Tile(a0)
+        move.l  #SprPat_Enemy,obj.Pat(a0)
+        move.w  #ENEMY_GFX,obj.Tile(a0)
         move.b  #4,obj.Render(a0)
         move.b  #2,obj.Priority(a0)
         move.b  #1,obj.Frame(a0)
@@ -68,7 +68,7 @@ _objectJoypadCtrl:
         btst    #5,joypadPressMirr.w
         beq.s   .NoC
         addq.b  #1,obj.Frame(a0)
-        cmpi.b  #22-1,obj.Frame(a0)
+        cmpi.b  #6-1,obj.Frame(a0)
         bcs.s   .NoC
         move.b  #0,obj.Frame(a0)
 
@@ -93,7 +93,8 @@ ObjPlayerRef:
 ; ---------------------------------------------------------------------------
 TILECNTMAX = 22
 
-RefFrame_Init:                         
+RefFrame_Init:  
+        rts                       
         addq.b  #2,obj.Action(a0)
         move.b  #18,obj.YRad(a0)
         move.b  #9,obj.XRad(a0)
