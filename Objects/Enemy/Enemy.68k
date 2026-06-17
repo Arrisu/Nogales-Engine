@@ -55,8 +55,8 @@ Enemy_Main:
 	bne.s	.Go
 	addq.b	#2,obj.Action(a0)
 	move.b	#3,obj.Frame(a0)
-	move.w	#-$500,obj.YSpeed(a0)
-	move.w	#-$200,obj.XSpeed(a0)
+	move.w	#-$400,obj.YSpeed(a0)
+	move.w	#-$120,obj.XSpeed(a0)
 .Go
        	andi.w  #$FF,obj.Y(a0)        	; Clamp Y pos. to 256 pix. max    
 	subq.b  #1,dev.Timer(a0)	; Wait timer 2 depleted
@@ -77,7 +77,8 @@ Enemy_Main:
 	bra.w	_objectDraw
 
 Enemy_Done:
-    	bsr.w	_objectFall
+    	bsr.w	_objectSetSpeed
+    	addi.w  #32,obj.YSpeed(a0)
 	tst.w	obj.YSpeed(a0)
 	bmi.s	.Wait
 	move.b	#4,obj.Frame(a0)
