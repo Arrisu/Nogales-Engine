@@ -78,7 +78,7 @@ Enemy_Main:
 
 Enemy_Done:
     	bsr.w	_objectSetSpeed
-    	addi.w  #32,obj.YSpeed(a0)
+    	addi.w  #24,obj.YSpeed(a0)
 	tst.w	obj.YSpeed(a0)
 	bmi.s	.Wait
 	move.b	#4,obj.Frame(a0)
